@@ -10,15 +10,16 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/demo")
 public class DemoController {
 
-    private DemoService demoService;
+    private final DemoService demoService;
 
     public DemoController(final DemoService demoService) {
         this.demoService = demoService;
     }
 
     @GetMapping("/foo")
-    public ResponseEntity readReadings() {
-
-        return ResponseEntity.ok("abc");
+    final public ResponseEntity foo() {
+        var demoModel = demoService.issueInvoice();
+        System.out.println(demoModel);
+        return ResponseEntity.ok(demoModel);
     }
 }

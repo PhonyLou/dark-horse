@@ -1,18 +1,19 @@
 package com.tw.darkhorse.controller;
 
+import com.tw.darkhorse.model.DemoModel;
 import com.tw.darkhorse.service.DemoService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class DemoControllerTest {
 
     private DemoController demoController;
-    private DemoService demoService = mock(DemoService.class);
+    private final DemoService demoService = mock(DemoService.class);
 
     @BeforeEach
     public void setUp() {
@@ -21,8 +22,13 @@ public class DemoControllerTest {
 
     @Test
     public void given_when_then() {
-        ResponseEntity responseEntity = demoController.readReadings();
+        DemoModel expectedDemoModel = new DemoModel("123", "firstname");
+        when(demoService.issueInvoice()).thenReturn(expectedDemoModel);
+
+        var responseEntity = demoController.foo();
+
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat((DemoModel) responseEntity.getBody()).isEqualTo(expectedDemoModel);
     }
 
 }
