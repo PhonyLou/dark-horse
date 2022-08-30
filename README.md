@@ -1,7 +1,7 @@
 # dark-horse
 
 ## Task
-http
-database(pg)
-MQ
-docker-compose
+- http
+- database(pg)
+- MQ
+- docker-compose
