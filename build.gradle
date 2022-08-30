@@ -28,29 +28,10 @@ sourceSets {
 
 idea {
     module {
-        testSourceDirs += project.sourceSets.functionalTest.java.srcDirs
-        testSourceDirs += project.sourceSets.functionalTest.resources.srcDirs
     }
 }
 
 configurations {
-    functionalTestImplementation.extendsFrom testImplementation
-    functionalTestRuntimeOnly.extendsFrom testRuntimeOnly
-}
-
-task functionalTest(type: Test) {
-    group = 'verification'
-    description = 'Runs the functional tests.'
-    testClassesDirs = sourceSets.functionalTest.output.classesDirs
-    classpath = sourceSets.functionalTest.runtimeClasspath
-    outputs.upToDateWhen { false }
-    mustRunAfter test
-
-    useJUnitPlatform()
-
-    testLogging {
-        events = ['FAILED', 'PASSED', 'SKIPPED', 'STANDARD_OUT']
-    }
 }
 
 dependencies {
@@ -67,8 +48,4 @@ test {
     testLogging {
         events = ['FAILED', 'PASSED', 'SKIPPED', 'STANDARD_OUT']
     }
-}
-
-check {
-    dependsOn functionalTest
 }
