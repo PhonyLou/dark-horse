@@ -1,3 +1,3 @@
 package com.tw.darkhorse.model;
 
-public record DemoModel(String id, String name) {}
+public record DemoModel(Long id, String name) {}

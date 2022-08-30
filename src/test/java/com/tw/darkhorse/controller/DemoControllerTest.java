@@ -22,7 +22,7 @@ public class DemoControllerTest {
 
     @Test
     public void given_when_then() {
-        DemoModel expectedDemoModel = new DemoModel("123", "firstname");
+        DemoModel expectedDemoModel = new DemoModel(123L, "firstname");
         when(demoService.issueInvoice()).thenReturn(expectedDemoModel);
 
         var responseEntity = demoController.foo();
