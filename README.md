@@ -8,7 +8,7 @@
 
 ## Requirements
 
-The project requires [Java 1.8](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html) or
+The project requires [Java 17](https://www.oracle.com/java/technologies/javase/jdk17-archive-downloads.html) or
 higher.
 
 The project makes use of Gradle and uses
@@ -51,18 +51,6 @@ There are two types of tests, the unit tests and the functional tests. These can
 
   ```console
   $ ./gradlew test
-  ```
-
-- Run functional tests only
-
-  ```console
-  $ ./gradlew functionalTest
-  ```
-
-- Run both unit and functional tests
-
-  ```console
-  $ ./gradlew check
   ```
 
 ### Run the application
