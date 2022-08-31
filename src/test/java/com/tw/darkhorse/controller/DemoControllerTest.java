@@ -1,6 +1,6 @@
 package com.tw.darkhorse.controller;
 
-import com.tw.darkhorse.model.DemoModel;
+import com.tw.darkhorse.service.model.DemoModel;
 import com.tw.darkhorse.service.DemoService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
