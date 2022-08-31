@@ -3,7 +3,6 @@ package com.tw.darkhorse.service;
 import com.tw.darkhorse.outbound.database.DemoEntity;
 import com.tw.darkhorse.outbound.database.DemoRepository;
 import com.tw.darkhorse.outbound.messagequeue.MqClient;
-import com.tw.darkhorse.service.model.DemoModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
