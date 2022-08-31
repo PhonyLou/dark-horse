@@ -4,7 +4,7 @@
 - http Client
 - database(pg) OK
 - MQ OK
-- docker-compose
+- docker-compose OK
 
 ## Setup
 
@@ -35,7 +35,7 @@ $ docker-compose up rabbitmq
 
 ### Run unit tests only
 ```shell
-$ ./gradlew flywayClean flywayMigrate clean test
+$ ./gradlew clean test
 ```
 
 ## Build app
