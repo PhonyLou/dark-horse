@@ -23,9 +23,9 @@ public class DemoControllerTest {
     @Test
     public void given_when_then() {
         DemoModel expectedDemoModel = new DemoModel(123L, "firstname");
-        when(demoService.issueInvoice()).thenReturn(expectedDemoModel);
+        when(demoService.save(expectedDemoModel)).thenReturn(expectedDemoModel);
 
-        var responseEntity = demoController.foo();
+        var responseEntity = demoController.foo(expectedDemoModel);
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat((DemoModel) responseEntity.getBody()).isEqualTo(expectedDemoModel);

@@ -17,8 +17,8 @@ public class DemoService {
     @Autowired
     private MqClient mqClient;
 
-    public DemoModel issueInvoice() {
-        var demoEntity = new DemoEntity(123L, "myName");
+    public DemoModel save(final DemoModel demoModel) {
+        var demoEntity = new DemoEntity(demoModel.id(), demoModel.name());
         DemoEntity savedEntity = demoRepository.save(demoEntity);
         return convertToModel(savedEntity);
     }
