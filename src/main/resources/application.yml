@@ -22,9 +22,3 @@ spring:
     password: guest
 queue:
   name: demoQueue
-flyway:
-  url: jdbc:postgresql://localhost:5433/demo
-  user: postgres
-  password:
-  locations: 'filesystem:database/migrations'
-
