@@ -3,6 +3,11 @@ spring:
     url: jdbc:postgresql://localhost:5432/demo
     username: postgres
     password:
+  flyway:
+    url: jdbc:postgresql://localhost:5432/demo
+    user: postgres
+    password:
+    locations: filesystem:database/migrations
   jpa:
     hibernate:
       ddl-auto: none
@@ -18,8 +23,8 @@ spring:
 queue:
   name: demoQueue
 flyway:
-  url: jdbc:postgresql://localhost:5432/demo
+  url: jdbc:postgresql://localhost:5433/demo
   user: postgres
   password:
-  locations: filesystem:database/migrations
+  locations: 'filesystem:database/migrations'
 
