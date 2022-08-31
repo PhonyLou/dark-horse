@@ -44,6 +44,7 @@ flyway {
     user = 'postgres'
     password = ''
     locations = ['filesystem:database/migrations']
+    cleanDisabled = false
 }
 
 test {
