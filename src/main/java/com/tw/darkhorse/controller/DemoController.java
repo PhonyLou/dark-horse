@@ -32,4 +32,9 @@ public class DemoController {
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
+
+    @GetMapping("/mq/{id}")
+    final public ResponseEntity sendMq(@PathVariable final Long id) {
+        return ResponseEntity.ok(demoService.sendToMq(id));
+    }
 }

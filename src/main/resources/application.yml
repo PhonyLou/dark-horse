@@ -10,8 +10,16 @@ spring:
         lob:
           non_contextual_creation: true
       dialect: org.hibernate.dialect.PostgreSQLDialect
+  rabbitmq:
+    host: localhost
+    port: 5673
+    username: guest
+    password: guest
+queue:
+  name: demoQueue
 flyway:
   url: jdbc:postgresql://localhost:5432/demo
   user: postgres
   password:
   locations: filesystem:database/migrations
+

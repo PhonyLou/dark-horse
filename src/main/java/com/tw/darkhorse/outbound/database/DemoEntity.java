@@ -1,4 +1,4 @@
-package com.tw.darkhorse.client;
+package com.tw.darkhorse.outbound.database;
 
 import javax.persistence.*;
 

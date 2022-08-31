@@ -1,7 +1,8 @@
 package com.tw.darkhorse.service;
 
-import com.tw.darkhorse.client.DemoEntity;
-import com.tw.darkhorse.client.DemoRepository;
+import com.tw.darkhorse.outbound.database.DemoEntity;
+import com.tw.darkhorse.outbound.database.DemoRepository;
+import com.tw.darkhorse.outbound.messagequeue.MqClient;
 import com.tw.darkhorse.model.DemoModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,6 +14,9 @@ public class DemoService {
 
     @Autowired
     private DemoRepository demoRepository;
+
+    @Autowired
+    private MqClient mqClient;
 
     public DemoModel issueInvoice() {
         var demoEntity = new DemoEntity(123L, "myName");
@@ -27,5 +31,10 @@ public class DemoService {
 
     private DemoModel convertToModel(final DemoEntity entity) {
         return new DemoModel(entity.getId(), entity.getName());
+    }
+
+    public String sendToMq(final Long id) {
+        mqClient.send("test String from spring with input " + id);
+        return "success";
     }
 }

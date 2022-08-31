@@ -3,7 +3,7 @@
 ## Task
 - http Client
 - database(pg) OK
-- MQ
+- MQ OK
 - docker-compose
 
 ## Setup
@@ -25,7 +25,15 @@ $ psql -c 'create database demo;' -U postgres
 
 ## Run tests
 
-Run unit tests only
+### precondition
+
+Setup message queue by using docker-compose command.
+You can manage it via `http://localhost:15673/`. Create a queue named `demoQueue` from the mq management dashboard.
+```shell
+$ docker-compose up rabbitmq
+```
+
+### Run unit tests only
 ```shell
 $ ./gradlew flywayClean flywayMigrate clean test
 ```
