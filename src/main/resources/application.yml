@@ -1,0 +1,17 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/demo
+    username: postgres
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: none
+      jdbc:
+        lob:
+          non_contextual_creation: true
+      dialect: org.hibernate.dialect.PostgreSQLDialect
+flyway:
+  url: jdbc:postgresql://localhost:5432/demo
+  user: postgres
+  password:
+  locations: filesystem:database/migrations

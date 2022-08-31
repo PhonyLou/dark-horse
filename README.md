@@ -6,7 +6,7 @@
 - MQ
 - docker-compose
 
-## Requirements
+## Setup
 
 The project requires [Java 17](https://www.oracle.com/java/technologies/javase/jdk17-archive-downloads.html) or
 higher.
@@ -14,6 +14,14 @@ higher.
 The project makes use of Gradle and uses
 the [Gradle wrapper](https://docs.gradle.org/current/userguide/gradle_wrapper.html), which means you don't need Gradle
 installed.
+
+Install database and run for local use and test. 
+```shell
+$ brew install postgresql
+$ brew services start postgresql
+$ psql postgres -c 'create user postgres createdb'
+$ psql -c 'create database demo;' -U postgres
+```
 
 ## Useful Gradle commands
 
