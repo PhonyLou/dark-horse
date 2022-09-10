@@ -13,8 +13,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static com.tw.darkhorse.DataHelper.asJsonString;
-import static com.tw.darkhorse.DataHelper.asTypeDemo;
+import static com.tw.darkhorse.helper.DataHelper.asJsonString;
+import static com.tw.darkhorse.helper.DataHelper.asTypeDemo;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;

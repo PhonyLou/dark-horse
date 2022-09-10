@@ -8,6 +8,7 @@ spring:
     user: postgres
     password:
     locations: filesystem:database/migrations
+    schemas: public
   jpa:
     hibernate:
       ddl-auto: none

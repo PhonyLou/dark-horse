@@ -18,7 +18,7 @@ public class DemoService {
     private MqClient mqClient;
 
     public DemoModel save(final DemoModel demoModel) {
-        var demoEntity = new DemoEntity(demoModel.id(), demoModel.name());
+        DemoEntity demoEntity = new DemoEntity(demoModel.getId(), demoModel.getName());
         DemoEntity savedEntity = demoRepository.save(demoEntity);
         return convertToModel(savedEntity);
     }

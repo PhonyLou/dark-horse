@@ -20,15 +20,15 @@ public class DemoRepositoryTest {
 
     @BeforeEach
     void beforeEach() {
-        flyway.clean();
-        flyway.migrate();
+//        flyway.clean();
+//        flyway.migrate();
     }
 
     @Test
     @DisplayName("should return 1 when save entity")
     void a1() {
-        var inputEntity = new DemoEntity(1L, "test name");
-        var savedEntity = demoRepository.save(inputEntity);
+        DemoEntity inputEntity = new DemoEntity(1L, "test name");
+        DemoEntity savedEntity = demoRepository.save(inputEntity);
         Assertions.assertEquals(inputEntity, savedEntity);
     }
 

@@ -9,3 +9,12 @@ services:
     volumes:
       - ~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq/
       - ~/.docker-conf/rabbitmq/log/:/var/log/rabbitmq
+
+  stubServer:
+    image: pactfoundation/pact-stub-server
+    working_dir: /app
+    ports:
+      - 8086:8080
+      - 15673:15672
+    volumes:
+      - $(pwd)/pacts/:/app/pacts

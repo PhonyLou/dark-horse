@@ -6,6 +6,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 @RestController
 @RequestMapping("/demo")
 public class DemoController {
@@ -18,13 +20,13 @@ public class DemoController {
 
     @PostMapping("/foo")
     final public ResponseEntity foo(@RequestBody DemoModel i) {
-        var demoModel = demoService.save(i);
+        DemoModel demoModel = demoService.save(i);
         return ResponseEntity.ok(demoModel);
     }
 
     @GetMapping("/bar/{id}")
     final public ResponseEntity bar(@PathVariable final Long id) {
-        var demoModel = demoService.findDemoBy(id);
+        Optional<DemoModel> demoModel = demoService.findDemoBy(id);
         if (demoModel.isPresent()) {
             return ResponseEntity.ok(demoModel.get());
         }
