@@ -2,6 +2,7 @@ package com.tw.travel.helper;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.tw.travel.controller.invoice.ServiceFeeInvoiceDTO;
 import com.tw.travel.controller.ServiceFeePaymentDTO;
 
 public abstract class DataHelper {
@@ -13,5 +14,9 @@ public abstract class DataHelper {
 
     public static ServiceFeePaymentDTO asTypeServiceFeePaymentDTO(String s) throws JsonProcessingException {
         return mapper.readValue(s, ServiceFeePaymentDTO.class);
+    }
+
+    public static ServiceFeeInvoiceDTO asTypeServiceFeeInvoiceDTO(String s) throws JsonProcessingException {
+        return mapper.readValue(s, ServiceFeeInvoiceDTO.class);
     }
 }
