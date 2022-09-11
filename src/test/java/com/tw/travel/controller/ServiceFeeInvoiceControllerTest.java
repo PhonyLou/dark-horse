@@ -17,7 +17,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.math.BigDecimal;
 
-import static com.tw.travel.helper.DataHelper.asTypeServiceFeeInvoiceDTO;
+import static com.tw.helper.DataHelper.asTypeServiceFeeInvoiceDTO;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
