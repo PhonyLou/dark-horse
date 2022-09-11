@@ -16,9 +16,11 @@ public class ServiceFeeServiceTest {
 
     @Test
     void should_return_success_when_payServiceFee_given_payment_request_not_exists() {
-        ServiceFeePaymentEntity paymentRequestRecord = new ServiceFeePaymentEntity(1L, "pending");
+        ServiceFeePaymentEntity initPaymentRequestRecord = new ServiceFeePaymentEntity(1L, "pending");
         ServiceFeePaymentRepo serviceFeePaymentRepo = mock(ServiceFeePaymentRepo.class);
-        when(serviceFeePaymentRepo.save(paymentRequestRecord)).thenReturn(paymentRequestRecord);
+        when(serviceFeePaymentRepo.save(initPaymentRequestRecord)).thenReturn(initPaymentRequestRecord);
+        ServiceFeePaymentEntity successRecord = new ServiceFeePaymentEntity(1L, "success");
+        when(serviceFeePaymentRepo.save(successRecord)).thenReturn(successRecord);
 
         ServiceFeePaymentApiModel apiModel = new ServiceFeePaymentApiModel(1L, BigDecimal.valueOf(1000L));
         ServiceFeePaymentHttpClient httpClient = mock(ServiceFeePaymentHttpClient.class);

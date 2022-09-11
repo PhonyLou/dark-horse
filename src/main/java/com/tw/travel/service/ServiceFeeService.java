@@ -22,6 +22,7 @@ public class ServiceFeeService {
     public ServiceFeePaymentModel payServiceFee(Long travelContractId, BigDecimal amount) {
         serviceFeePaymentRepo.save(new ServiceFeePaymentEntity(travelContractId, "pending"));
         if (httpClient.payServiceFee(new ServiceFeePaymentApiModel(travelContractId, amount))) {
+            serviceFeePaymentRepo.save(new ServiceFeePaymentEntity(travelContractId, "success"));
             return new ServiceFeePaymentModel(true);
         } else {
             return new ServiceFeePaymentModel(false);
