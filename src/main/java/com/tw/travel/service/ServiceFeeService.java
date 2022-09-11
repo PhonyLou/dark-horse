@@ -22,6 +22,11 @@ public class ServiceFeeService {
 
     public ServiceFeePaymentModel payServiceFee(Long travelContractId, BigDecimal amount) {
         Optional<ServiceFeePaymentEntity> paymentRecord = serviceFeePaymentRepo.findById(travelContractId);
+        Optional<ServiceFeePaymentEntity> successRecord = paymentRecord.filter(p -> p.getStatus().equalsIgnoreCase("success"));
+        if (successRecord.isPresent()) {
+            return new ServiceFeePaymentModel(true);
+        }
+
         if (!paymentRecord.isPresent()) {
             serviceFeePaymentRepo.save(new ServiceFeePaymentEntity(travelContractId, "pending"));
         }

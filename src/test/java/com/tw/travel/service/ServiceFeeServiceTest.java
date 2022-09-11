@@ -30,7 +30,7 @@ public class ServiceFeeServiceTest {
         ServiceFeeService serviceFeeService = new ServiceFeeService(serviceFeePaymentRepo, httpClient);
         ServiceFeePaymentModel serviceFeePaymentModel = serviceFeeService.payServiceFee(1L, BigDecimal.valueOf(1000L));
 
-        Assertions.assertEquals(serviceFeePaymentModel, new ServiceFeePaymentModel(true));
+        Assertions.assertEquals(new ServiceFeePaymentModel(true), serviceFeePaymentModel);
     }
 
     @Test
@@ -50,6 +50,21 @@ public class ServiceFeeServiceTest {
         ServiceFeeService serviceFeeService = new ServiceFeeService(serviceFeePaymentRepo, httpClient);
         ServiceFeePaymentModel serviceFeePaymentModel = serviceFeeService.payServiceFee(1L, BigDecimal.valueOf(1000L));
 
-        Assertions.assertEquals(serviceFeePaymentModel, new ServiceFeePaymentModel(true));
+        Assertions.assertEquals(new ServiceFeePaymentModel(true), serviceFeePaymentModel);
+    }
+
+    @Test
+    void should_return_success_when_payServiceFee_given_payment_success() {
+        ServiceFeePaymentRepo serviceFeePaymentRepo = mock(ServiceFeePaymentRepo.class);
+
+        ServiceFeePaymentEntity paymentRequestRecord = new ServiceFeePaymentEntity(1L, "success");
+        when(serviceFeePaymentRepo.findById(1L)).thenReturn(Optional.of(paymentRequestRecord));
+
+        ServiceFeePaymentHttpClient httpClient = mock(ServiceFeePaymentHttpClient.class);
+
+        ServiceFeeService serviceFeeService = new ServiceFeeService(serviceFeePaymentRepo, httpClient);
+        ServiceFeePaymentModel serviceFeePaymentModel = serviceFeeService.payServiceFee(1L, BigDecimal.valueOf(1000L));
+
+        Assertions.assertEquals(new ServiceFeePaymentModel(true), serviceFeePaymentModel);
     }
 }

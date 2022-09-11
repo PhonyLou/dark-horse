@@ -18,6 +18,13 @@ public class ServiceFeePaymentModel {
     }
 
     @Override
+    public String toString() {
+        return "ServiceFeePaymentModel{" +
+                "isSuccess=" + isSuccess +
+                '}';
+    }
+
+    @Override
     public int hashCode() {
         return Objects.hash(isSuccess);
     }
