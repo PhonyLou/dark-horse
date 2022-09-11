@@ -6,9 +6,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -34,5 +37,14 @@ public class ServiceFeePaymentHttpClientTest {
         ServiceFeePaymentHttpClient httpClient = new ServiceFeePaymentHttpClient(restTemplate);
         boolean isPaymentSuccess = httpClient.payServiceFee(new ServiceFeePaymentApiModel(1L, BigDecimal.valueOf(1000L)));
         Assertions.assertFalse(isPaymentSuccess);
+    }
+
+    @Test
+    void should_throw_InternalServerError_when_payServiceFee_given_payment_gateway_returns_server_side_error(PaymentGatewayStub paymentGatewayStub) {
+        paymentGatewayStub.stubPaymentGateway("/service-fee-payment", 500);
+
+        ServiceFeePaymentHttpClient httpClient = new ServiceFeePaymentHttpClient(restTemplate);
+        assertThrows(HttpServerErrorException.InternalServerError.class,
+                () -> httpClient.payServiceFee(new ServiceFeePaymentApiModel(1L, BigDecimal.valueOf(1000L))));
     }
 }
