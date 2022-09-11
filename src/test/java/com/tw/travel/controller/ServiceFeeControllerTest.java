@@ -14,6 +14,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.web.client.HttpServerErrorException;
 
 import java.math.BigDecimal;
 
@@ -69,6 +70,19 @@ public class ServiceFeeControllerTest {
         ServiceFeePaymentDTO returnedDTO = asTypeServiceFeePaymentDTO(contentAsString);
 
         Assertions.assertEquals(new ServiceFeePaymentDTO("insufficient fund"), returnedDTO);
+    }
+
+    @Test
+    public void given_payment_gateway_with_InternalServerError_when_paying_service_fee_then_return_500() throws Exception {
+        when(serviceFeeService.payServiceFee(1L, BigDecimal.valueOf(1000L))).thenThrow(HttpServerErrorException.InternalServerError.class);
+
+        String contentAsString = mockMvc.perform(post("/travel-contracts/1/service-fee-payments")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"amount\": 1000}")).andExpect(status().isInternalServerError())
+                .andReturn().getResponse().getContentAsString();
+        ServiceFeePaymentDTO returnedDTO = asTypeServiceFeePaymentDTO(contentAsString);
+
+        Assertions.assertEquals(new ServiceFeePaymentDTO("payment failed, try later"), returnedDTO);
     }
 
 }

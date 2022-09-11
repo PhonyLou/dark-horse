@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.HttpServerErrorException;
 
 @RestController
 public class ServiceFeePaymentController {
@@ -25,6 +26,8 @@ public class ServiceFeePaymentController {
             return ResponseEntity.ok(new ServiceFeePaymentDTO("payment success"));
         } catch (InsufficientFundException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ServiceFeePaymentDTO("insufficient fund"));
+        } catch (HttpServerErrorException.InternalServerError error) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ServiceFeePaymentDTO("payment failed, try later"));
         }
     }
 
