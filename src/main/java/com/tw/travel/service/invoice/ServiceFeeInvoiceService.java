@@ -20,8 +20,9 @@ public class ServiceFeeInvoiceService {
     }
 
     public ServiceFeeInvoiceModel issueServiceFeeInvoice(Long travelContractId, BigDecimal amount) {
-        Optional<ServiceFeePaymentEntity> paymentRecord = serviceFeePaymentRepo.findById(travelContractId);
-        Optional<ServiceFeePaymentEntity> successRecord = paymentRecord.filter(p -> p.getStatus().equalsIgnoreCase("success"));
+        Optional<ServiceFeePaymentEntity> successRecord = serviceFeePaymentRepo
+                .findById(travelContractId)
+                .filter(p -> p.getStatus().equalsIgnoreCase("success"));
         if (successRecord.isPresent()) {
             boolean sendMqSuccess = invoiceMqClient.issueServiceFeeInvoice(new ServiceFeeInvoiceMqModel(travelContractId, amount));
             return new ServiceFeeInvoiceModel(sendMqSuccess);

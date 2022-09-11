@@ -18,7 +18,7 @@ import static org.mockito.Mockito.when;
 public class ServiceFeeInvoiceServiceTest {
 
     @Test
-    void should_return_success_when_issueServiceFeeInvoice_given_payment_success_and_invoice_request_accepted() {
+    void should_return_true_when_issueServiceFeeInvoice_given_payment_success_and_invoice_request_accepted() {
         ServiceFeePaymentRepo serviceFeePaymentRepo = mock(ServiceFeePaymentRepo.class);
         ServiceFeePaymentEntity paymentRecord = new ServiceFeePaymentEntity(1L, "success");
         when(serviceFeePaymentRepo.findById(1L)).thenReturn(Optional.of(paymentRecord));
@@ -27,8 +27,22 @@ public class ServiceFeeInvoiceServiceTest {
         when(invoiceMqClient.issueServiceFeeInvoice(new ServiceFeeInvoiceMqModel(1L, BigDecimal.valueOf(1000L)))).thenReturn(true);
 
         ServiceFeeInvoiceService service = new ServiceFeeInvoiceService(serviceFeePaymentRepo, invoiceMqClient);
-        ServiceFeeInvoiceModel ServiceFeeInvoiceModel = service.issueServiceFeeInvoice(1L, BigDecimal.valueOf(1000L));
+        ServiceFeeInvoiceModel invoiceModel = service.issueServiceFeeInvoice(1L, BigDecimal.valueOf(1000L));
 
-        assertEquals(new ServiceFeeInvoiceModel(true), ServiceFeeInvoiceModel);
+        assertEquals(new ServiceFeeInvoiceModel(true), invoiceModel);
+    }
+
+    @Test
+    void should_return_false_when_issueServiceFeeInvoice_given_payment_is_not_success() {
+        ServiceFeePaymentRepo serviceFeePaymentRepo = mock(ServiceFeePaymentRepo.class);
+        ServiceFeePaymentEntity paymentRecord = new ServiceFeePaymentEntity(1L, "pending");
+        when(serviceFeePaymentRepo.findById(1L)).thenReturn(Optional.of(paymentRecord));
+
+        InvoiceMqClient invoiceMqClient = mock(InvoiceMqClient.class);
+
+        ServiceFeeInvoiceService service = new ServiceFeeInvoiceService(serviceFeePaymentRepo, invoiceMqClient);
+        ServiceFeeInvoiceModel invoiceModel = service.issueServiceFeeInvoice(1L, BigDecimal.valueOf(1000L));
+
+        assertEquals(new ServiceFeeInvoiceModel(false), invoiceModel);
     }
 }
