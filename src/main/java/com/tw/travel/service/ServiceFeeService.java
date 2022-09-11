@@ -7,6 +7,7 @@ import com.tw.travel.client.http.ServiceFeePaymentHttpClient;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.Optional;
 
 @Service
 public class ServiceFeeService {
@@ -20,7 +21,11 @@ public class ServiceFeeService {
     }
 
     public ServiceFeePaymentModel payServiceFee(Long travelContractId, BigDecimal amount) {
-        serviceFeePaymentRepo.save(new ServiceFeePaymentEntity(travelContractId, "pending"));
+        Optional<ServiceFeePaymentEntity> paymentRecord = serviceFeePaymentRepo.findById(travelContractId);
+        if (!paymentRecord.isPresent()) {
+            serviceFeePaymentRepo.save(new ServiceFeePaymentEntity(travelContractId, "pending"));
+        }
+
         if (httpClient.payServiceFee(new ServiceFeePaymentApiModel(travelContractId, amount))) {
             serviceFeePaymentRepo.save(new ServiceFeePaymentEntity(travelContractId, "success"));
             return new ServiceFeePaymentModel(true);
