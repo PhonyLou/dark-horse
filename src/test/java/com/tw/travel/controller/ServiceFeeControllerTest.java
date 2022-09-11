@@ -45,7 +45,7 @@ public class ServiceFeeControllerTest {
     @Test
     public void given_balance_sufficient_when_paying_service_fee_then_return_200() throws Exception {
         when(serviceFeeService.payServiceFee(1L, BigDecimal.valueOf(1000L))).thenReturn(
-                new ServiceFeePaymentModel(1L, BigDecimal.valueOf(1000L))
+                new ServiceFeePaymentModel(true)
         );
 
         String contentAsString = mockMvc.perform(post("/travel-contracts/1/service-fee-payments")
