@@ -58,4 +58,19 @@ public class ServiceFeeInvoiceControllerTest {
         Assertions.assertEquals(new ServiceFeeInvoiceDTO("invoice request accepted"), returnedDTO);
     }
 
+    @Test
+    public void should_return_400_when_issue_service_fee_invoice_given_payment_not_success() throws Exception {
+        when(service.issueServiceFeeInvoice(1L, BigDecimal.valueOf(1000L))).thenReturn(
+                new ServiceFeeInvoiceModel(false)
+        );
+
+        String contentAsString = mockMvc.perform(post("/travel-contracts/1/service-fee-invoices")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"amount\": 1000}")).andExpect(status().isBadRequest())
+                .andReturn().getResponse().getContentAsString();
+        ServiceFeeInvoiceDTO returnedDTO = asTypeServiceFeeInvoiceDTO(contentAsString);
+
+        Assertions.assertEquals(new ServiceFeeInvoiceDTO("invoice request not accepted"), returnedDTO);
+    }
+
 }

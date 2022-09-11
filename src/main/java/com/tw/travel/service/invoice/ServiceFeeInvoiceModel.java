@@ -9,6 +9,10 @@ public class ServiceFeeInvoiceModel {
         this.isSuccess = isSuccess;
     }
 
+    public boolean isSuccess() {
+        return isSuccess;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

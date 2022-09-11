@@ -1,6 +1,8 @@
 package com.tw.travel.controller.invoice;
 
+import com.tw.travel.service.invoice.ServiceFeeInvoiceModel;
 import com.tw.travel.service.invoice.ServiceFeeInvoiceService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,8 +20,12 @@ public class ServiceFeeInvoiceController {
 
     @PostMapping("/travel-contracts/{tid}/service-fee-invoices")
     final public ResponseEntity payServiceFee(@PathVariable("tid") Long travelContractId, @RequestBody ServiceFeeInvoiceRequest req) {
-        service.issueServiceFeeInvoice(travelContractId, req.getAmount());
-        return ResponseEntity.ok(new ServiceFeeInvoiceDTO("invoice request accepted"));
+        ServiceFeeInvoiceModel serviceFeeInvoiceModel = service.issueServiceFeeInvoice(travelContractId, req.getAmount());
+        if (serviceFeeInvoiceModel.isSuccess()) {
+            return ResponseEntity.ok(new ServiceFeeInvoiceDTO("invoice request accepted"));
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ServiceFeeInvoiceDTO("invoice request not accepted"));
+        }
     }
 
 }
