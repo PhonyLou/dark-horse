@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.Resource;
@@ -24,8 +25,12 @@ public class ServiceFeePaymentHttpClient {
     }
 
     public boolean payServiceFee(final ServiceFeePaymentApiModel apiModel) {
-        ResponseEntity<String> stringResponseEntity = restTemplate.postForEntity("http://localhost:8024/service-fee-payment", apiModel, String.class);
-        System.out.println("code ===========>" + stringResponseEntity.getStatusCode().value());
-        return stringResponseEntity.getStatusCode().is2xxSuccessful();
+        try {
+            ResponseEntity<String> stringResponseEntity = restTemplate.postForEntity("http://localhost:8024/service-fee-payment", apiModel, String.class);
+            System.out.println("code ===========>" + stringResponseEntity.getStatusCode().value());
+            return stringResponseEntity.getStatusCode().is2xxSuccessful();
+        } catch (HttpClientErrorException e) {
+            return false;
+        }
     }
 }
