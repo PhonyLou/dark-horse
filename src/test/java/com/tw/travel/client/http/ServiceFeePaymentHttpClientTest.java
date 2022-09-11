@@ -1,5 +1,6 @@
 package com.tw.travel.client.http;
 
+import com.tw.travel.client.http.payment.PaymentGateway;
 import com.tw.travel.client.http.payment.ServiceFeePaymentApiModel;
 import com.tw.travel.client.http.payment.ServiceFeePaymentHttpClient;
 import org.junit.jupiter.api.Assertions;
@@ -24,11 +25,14 @@ public class ServiceFeePaymentHttpClientTest {
     @Autowired
     private RestTemplate restTemplate;
 
+    @Autowired
+    private PaymentGateway paymentGateway;
+
     @Test
     void should_return_true_when_payServiceFee_given_payment_gateway_returns_200(PaymentGatewayStub paymentGatewayStub) {
         paymentGatewayStub.stubPaymentGateway("/service-fee-payment", 200, 0);
 
-        ServiceFeePaymentHttpClient httpClient = new ServiceFeePaymentHttpClient(restTemplate);
+        ServiceFeePaymentHttpClient httpClient = new ServiceFeePaymentHttpClient(restTemplate, paymentGateway);
         boolean isPaymentSuccess = httpClient.payServiceFee(new ServiceFeePaymentApiModel(1L, BigDecimal.valueOf(1000L)));
         Assertions.assertTrue(isPaymentSuccess);
     }
@@ -37,7 +41,7 @@ public class ServiceFeePaymentHttpClientTest {
     void should_return_false_when_payServiceFee_given_payment_gateway_returns_400(PaymentGatewayStub paymentGatewayStub) {
         paymentGatewayStub.stubPaymentGateway("/service-fee-payment", 400, 0);
 
-        ServiceFeePaymentHttpClient httpClient = new ServiceFeePaymentHttpClient(restTemplate);
+        ServiceFeePaymentHttpClient httpClient = new ServiceFeePaymentHttpClient(restTemplate, paymentGateway);
         boolean isPaymentSuccess = httpClient.payServiceFee(new ServiceFeePaymentApiModel(1L, BigDecimal.valueOf(1000L)));
         Assertions.assertFalse(isPaymentSuccess);
     }
@@ -46,7 +50,7 @@ public class ServiceFeePaymentHttpClientTest {
     void should_throw_InternalServerError_when_payServiceFee_given_payment_gateway_returns_server_side_error(PaymentGatewayStub paymentGatewayStub) {
         paymentGatewayStub.stubPaymentGateway("/service-fee-payment", 500, 0);
 
-        ServiceFeePaymentHttpClient httpClient = new ServiceFeePaymentHttpClient(restTemplate);
+        ServiceFeePaymentHttpClient httpClient = new ServiceFeePaymentHttpClient(restTemplate, paymentGateway);
         assertThrows(HttpServerErrorException.InternalServerError.class,
                 () -> httpClient.payServiceFee(new ServiceFeePaymentApiModel(1L, BigDecimal.valueOf(1000L))));
     }
@@ -55,7 +59,7 @@ public class ServiceFeePaymentHttpClientTest {
     void should_throw_InternalServerError_when_payServiceFee_given_timeout(PaymentGatewayStub paymentGatewayStub) {
         paymentGatewayStub.stubPaymentGateway("/service-fee-payment", 500, 200);
 
-        ServiceFeePaymentHttpClient httpClient = new ServiceFeePaymentHttpClient(restTemplate);
+        ServiceFeePaymentHttpClient httpClient = new ServiceFeePaymentHttpClient(restTemplate, paymentGateway);
         assertThrows(ResourceAccessException.class,
                 () -> httpClient.payServiceFee(new ServiceFeePaymentApiModel(1L, BigDecimal.valueOf(1000L))));
     }

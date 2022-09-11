@@ -1,32 +1,25 @@
 package com.tw.travel.client.http.payment;
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.env.Environment;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
-
-import javax.annotation.Resource;
 
 @Component
 public class ServiceFeePaymentHttpClient {
 
     private RestTemplate restTemplate;
 
-    @Resource
-    private Environment env;
+    private PaymentGateway paymentGateway;
 
-    @Value("${payment-gateway.host}")
-    private String gatewayHost;
-
-    public ServiceFeePaymentHttpClient(RestTemplate restTemplate) {
+    public ServiceFeePaymentHttpClient(RestTemplate restTemplate, PaymentGateway paymentGateway) {
         this.restTemplate = restTemplate;
+        this.paymentGateway = paymentGateway;
     }
 
     public boolean payServiceFee(final ServiceFeePaymentApiModel apiModel) {
         try {
-            ResponseEntity<String> stringResponseEntity = restTemplate.postForEntity("http://localhost:8024/service-fee-payment", apiModel, String.class);
+            ResponseEntity<String> stringResponseEntity = restTemplate.postForEntity(paymentGateway.getHost() + "/service-fee-payment", apiModel, String.class);
             return stringResponseEntity.getStatusCode().is2xxSuccessful();
         } catch (HttpClientErrorException e) {
             return false;
