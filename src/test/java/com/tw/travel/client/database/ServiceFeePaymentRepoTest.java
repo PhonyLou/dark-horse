@@ -40,4 +40,16 @@ public class ServiceFeePaymentRepoTest {
         ServiceFeePaymentEntity actualUpdatedEntity = repo.save(expectedUpdateEntity);
         Assertions.assertEquals(expectedUpdateEntity, actualUpdatedEntity);
     }
+
+    @Test
+    void should_return_entity_with_failed_when_update_status_given_payment_failed() {
+        ServiceFeePaymentEntity expectedEntity = new ServiceFeePaymentEntity(1L, "pending");
+        ServiceFeePaymentEntity savedEntity = repo.save(expectedEntity);
+        Assertions.assertEquals("pending", savedEntity.getStatus());
+
+        ServiceFeePaymentEntity expectedUpdateEntity = new ServiceFeePaymentEntity(1L, "failed");
+        repo.save(expectedUpdateEntity);
+
+        Assertions.assertEquals("failed", repo.findById(1L).get().getStatus());
+    }
 }
