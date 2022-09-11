@@ -33,9 +33,23 @@ public class ServiceFeeInvoiceServiceTest {
     }
 
     @Test
-    void should_return_false_when_issueServiceFeeInvoice_given_payment_is_not_success() {
+    void should_return_false_when_issueServiceFeeInvoice_given_payment_is_pending() {
         ServiceFeePaymentRepo serviceFeePaymentRepo = mock(ServiceFeePaymentRepo.class);
         ServiceFeePaymentEntity paymentRecord = new ServiceFeePaymentEntity(1L, "pending");
+        when(serviceFeePaymentRepo.findById(1L)).thenReturn(Optional.of(paymentRecord));
+
+        InvoiceMqClient invoiceMqClient = mock(InvoiceMqClient.class);
+
+        ServiceFeeInvoiceService service = new ServiceFeeInvoiceService(serviceFeePaymentRepo, invoiceMqClient);
+        ServiceFeeInvoiceModel invoiceModel = service.issueServiceFeeInvoice(1L, BigDecimal.valueOf(1000L));
+
+        assertEquals(new ServiceFeeInvoiceModel(false), invoiceModel);
+    }
+
+    @Test
+    void should_return_false_when_issueServiceFeeInvoice_given_payment_is_failed() {
+        ServiceFeePaymentRepo serviceFeePaymentRepo = mock(ServiceFeePaymentRepo.class);
+        ServiceFeePaymentEntity paymentRecord = new ServiceFeePaymentEntity(1L, "failed");
         when(serviceFeePaymentRepo.findById(1L)).thenReturn(Optional.of(paymentRecord));
 
         InvoiceMqClient invoiceMqClient = mock(InvoiceMqClient.class);

@@ -11,8 +11,8 @@ import java.util.Optional;
 
 @Service
 public class ServiceFeeInvoiceService {
-    private ServiceFeePaymentRepo serviceFeePaymentRepo;
-    private InvoiceMqClient invoiceMqClient;
+    private final ServiceFeePaymentRepo serviceFeePaymentRepo;
+    private final InvoiceMqClient invoiceMqClient;
 
     public ServiceFeeInvoiceService(ServiceFeePaymentRepo serviceFeePaymentRepo, InvoiceMqClient invoiceMqClient) {
         this.serviceFeePaymentRepo = serviceFeePaymentRepo;
