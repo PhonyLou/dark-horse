@@ -7,6 +7,7 @@ import com.tw.travel.client.http.ServiceFeePaymentHttpClient;
 import com.tw.travel.exception.InsufficientFundException;
 import org.junit.jupiter.api.Test;
 import org.springframework.web.client.HttpServerErrorException;
+import org.springframework.web.client.ResourceAccessException;
 
 import java.math.BigDecimal;
 import java.util.Optional;
@@ -106,6 +107,24 @@ public class ServiceFeeServiceTest {
 
         ServiceFeeService serviceFeeService = new ServiceFeeService(serviceFeePaymentRepo, httpClient);
         assertThrows(HttpServerErrorException.InternalServerError.class,
+                () -> serviceFeeService.payServiceFee(1L, BigDecimal.valueOf(1000L)));
+    }
+
+    @Test
+    void should_throw_ResourceAccessException_when_payServiceFee_given_payment_gateway_timeout() {
+        ServiceFeePaymentRepo serviceFeePaymentRepo = mock(ServiceFeePaymentRepo.class);
+
+        when(serviceFeePaymentRepo.findById(1L)).thenReturn(Optional.empty());
+
+        ServiceFeePaymentEntity initPaymentRequestRecord = new ServiceFeePaymentEntity(1L, "pending");
+        when(serviceFeePaymentRepo.save(initPaymentRequestRecord)).thenReturn(initPaymentRequestRecord);
+
+        ServiceFeePaymentHttpClient httpClient = mock(ServiceFeePaymentHttpClient.class);
+        when(httpClient.payServiceFee(new ServiceFeePaymentApiModel(1L, BigDecimal.valueOf(1000L))))
+                .thenThrow(ResourceAccessException.class);
+
+        ServiceFeeService serviceFeeService = new ServiceFeeService(serviceFeePaymentRepo, httpClient);
+        assertThrows(ResourceAccessException.class,
                 () -> serviceFeeService.payServiceFee(1L, BigDecimal.valueOf(1000L)));
     }
 }
