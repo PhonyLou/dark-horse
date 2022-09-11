@@ -4,12 +4,14 @@ import com.tw.travel.client.database.ServiceFeePaymentEntity;
 import com.tw.travel.client.database.ServiceFeePaymentRepo;
 import com.tw.travel.client.http.ServiceFeePaymentApiModel;
 import com.tw.travel.client.http.ServiceFeePaymentHttpClient;
-import org.junit.jupiter.api.Assertions;
+import com.tw.travel.exception.InsufficientFundException;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -30,7 +32,7 @@ public class ServiceFeeServiceTest {
         ServiceFeeService serviceFeeService = new ServiceFeeService(serviceFeePaymentRepo, httpClient);
         ServiceFeePaymentModel serviceFeePaymentModel = serviceFeeService.payServiceFee(1L, BigDecimal.valueOf(1000L));
 
-        Assertions.assertEquals(new ServiceFeePaymentModel(true), serviceFeePaymentModel);
+        assertEquals(new ServiceFeePaymentModel(true), serviceFeePaymentModel);
     }
 
     @Test
@@ -50,7 +52,7 @@ public class ServiceFeeServiceTest {
         ServiceFeeService serviceFeeService = new ServiceFeeService(serviceFeePaymentRepo, httpClient);
         ServiceFeePaymentModel serviceFeePaymentModel = serviceFeeService.payServiceFee(1L, BigDecimal.valueOf(1000L));
 
-        Assertions.assertEquals(new ServiceFeePaymentModel(true), serviceFeePaymentModel);
+        assertEquals(new ServiceFeePaymentModel(true), serviceFeePaymentModel);
     }
 
     @Test
@@ -65,6 +67,24 @@ public class ServiceFeeServiceTest {
         ServiceFeeService serviceFeeService = new ServiceFeeService(serviceFeePaymentRepo, httpClient);
         ServiceFeePaymentModel serviceFeePaymentModel = serviceFeeService.payServiceFee(1L, BigDecimal.valueOf(1000L));
 
-        Assertions.assertEquals(new ServiceFeePaymentModel(true), serviceFeePaymentModel);
+        assertEquals(new ServiceFeePaymentModel(true), serviceFeePaymentModel);
+    }
+
+    @Test
+    void should_throw_insufficientFundException_when_payServiceFee_given_payment_gateway_returns_false() {
+        ServiceFeePaymentRepo serviceFeePaymentRepo = mock(ServiceFeePaymentRepo.class);
+
+        when(serviceFeePaymentRepo.findById(1L)).thenReturn(Optional.empty());
+
+        ServiceFeePaymentEntity initPaymentRequestRecord = new ServiceFeePaymentEntity(1L, "pending");
+        when(serviceFeePaymentRepo.findById(1L)).thenReturn(Optional.of(initPaymentRequestRecord));
+
+        ServiceFeePaymentHttpClient httpClient = mock(ServiceFeePaymentHttpClient.class);
+        when(httpClient.payServiceFee(new ServiceFeePaymentApiModel(1L, BigDecimal.valueOf(1000L))))
+                .thenReturn(false);
+
+        ServiceFeeService serviceFeeService = new ServiceFeeService(serviceFeePaymentRepo, httpClient);
+        assertThrows(InsufficientFundException.class,
+                () -> serviceFeeService.payServiceFee(1L, BigDecimal.valueOf(1000L)));
     }
 }

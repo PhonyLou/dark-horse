@@ -4,6 +4,7 @@ import com.tw.travel.client.database.ServiceFeePaymentEntity;
 import com.tw.travel.client.database.ServiceFeePaymentRepo;
 import com.tw.travel.client.http.ServiceFeePaymentApiModel;
 import com.tw.travel.client.http.ServiceFeePaymentHttpClient;
+import com.tw.travel.exception.InsufficientFundException;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -35,7 +36,7 @@ public class ServiceFeeService {
             serviceFeePaymentRepo.save(new ServiceFeePaymentEntity(travelContractId, "success"));
             return new ServiceFeePaymentModel(true);
         } else {
-            return new ServiceFeePaymentModel(false);
+            throw new InsufficientFundException();
         }
     }
 }
