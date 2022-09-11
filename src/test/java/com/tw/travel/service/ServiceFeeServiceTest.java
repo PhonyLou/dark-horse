@@ -77,7 +77,9 @@ public class ServiceFeeServiceTest {
         when(serviceFeePaymentRepo.findById(1L)).thenReturn(Optional.empty());
 
         ServiceFeePaymentEntity initPaymentRequestRecord = new ServiceFeePaymentEntity(1L, "pending");
-        when(serviceFeePaymentRepo.findById(1L)).thenReturn(Optional.of(initPaymentRequestRecord));
+        when(serviceFeePaymentRepo.save(initPaymentRequestRecord)).thenReturn(initPaymentRequestRecord);
+        ServiceFeePaymentEntity failedPaymentRequestRecord = new ServiceFeePaymentEntity(1L, "failed");
+        when(serviceFeePaymentRepo.save(failedPaymentRequestRecord)).thenReturn(failedPaymentRequestRecord);
 
         ServiceFeePaymentHttpClient httpClient = mock(ServiceFeePaymentHttpClient.class);
         when(httpClient.payServiceFee(new ServiceFeePaymentApiModel(1L, BigDecimal.valueOf(1000L))))

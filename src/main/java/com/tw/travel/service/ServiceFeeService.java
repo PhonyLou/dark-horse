@@ -36,6 +36,7 @@ public class ServiceFeeService {
             serviceFeePaymentRepo.save(new ServiceFeePaymentEntity(travelContractId, "success"));
             return new ServiceFeePaymentModel(true);
         } else {
+            serviceFeePaymentRepo.save(new ServiceFeePaymentEntity(travelContractId, "failed"));
             throw new InsufficientFundException();
         }
     }
