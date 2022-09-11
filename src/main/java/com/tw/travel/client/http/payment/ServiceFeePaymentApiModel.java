@@ -1,4 +1,4 @@
-package com.tw.travel.client.http;
+package com.tw.travel.client.http.payment;
 
 import java.math.BigDecimal;
 import java.util.Objects;

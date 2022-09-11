@@ -1,10 +1,12 @@
 package com.tw.travel.service;
 
-import com.tw.travel.client.database.ServiceFeePaymentEntity;
-import com.tw.travel.client.database.ServiceFeePaymentRepo;
-import com.tw.travel.client.http.ServiceFeePaymentApiModel;
-import com.tw.travel.client.http.ServiceFeePaymentHttpClient;
+import com.tw.travel.client.database.payment.ServiceFeePaymentEntity;
+import com.tw.travel.client.database.payment.ServiceFeePaymentRepo;
+import com.tw.travel.client.http.payment.ServiceFeePaymentApiModel;
+import com.tw.travel.client.http.payment.ServiceFeePaymentHttpClient;
 import com.tw.travel.exception.InsufficientFundException;
+import com.tw.travel.service.payment.ServiceFeePaymentModel;
+import com.tw.travel.service.payment.ServiceFeeService;
 import org.junit.jupiter.api.Test;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.ResourceAccessException;

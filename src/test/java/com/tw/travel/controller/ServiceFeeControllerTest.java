@@ -1,8 +1,9 @@
 package com.tw.travel.controller;
 
+import com.tw.travel.controller.payment.ServiceFeePaymentDTO;
 import com.tw.travel.exception.InsufficientFundException;
-import com.tw.travel.service.ServiceFeePaymentModel;
-import com.tw.travel.service.ServiceFeeService;
+import com.tw.travel.service.payment.ServiceFeePaymentModel;
+import com.tw.travel.service.payment.ServiceFeeService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

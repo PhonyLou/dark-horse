@@ -1,6 +1,8 @@
 package com.tw.travel.client.database;
 
 
+import com.tw.travel.client.database.payment.ServiceFeePaymentEntity;
+import com.tw.travel.client.database.payment.ServiceFeePaymentRepo;
 import org.flywaydb.core.Flyway;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;

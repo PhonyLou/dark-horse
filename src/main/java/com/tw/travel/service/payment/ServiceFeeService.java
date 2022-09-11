@@ -1,9 +1,9 @@
-package com.tw.travel.service;
+package com.tw.travel.service.payment;
 
-import com.tw.travel.client.database.ServiceFeePaymentEntity;
-import com.tw.travel.client.database.ServiceFeePaymentRepo;
-import com.tw.travel.client.http.ServiceFeePaymentApiModel;
-import com.tw.travel.client.http.ServiceFeePaymentHttpClient;
+import com.tw.travel.client.database.payment.ServiceFeePaymentEntity;
+import com.tw.travel.client.database.payment.ServiceFeePaymentRepo;
+import com.tw.travel.client.http.payment.ServiceFeePaymentApiModel;
+import com.tw.travel.client.http.payment.ServiceFeePaymentHttpClient;
 import com.tw.travel.exception.InsufficientFundException;
 import org.springframework.stereotype.Service;
 

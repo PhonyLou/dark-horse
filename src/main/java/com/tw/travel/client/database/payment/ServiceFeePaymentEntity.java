@@ -1,4 +1,4 @@
-package com.tw.travel.client.database;
+package com.tw.travel.client.database.payment;
 
 import javax.persistence.*;
 import java.util.Objects;

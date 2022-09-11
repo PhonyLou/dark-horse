@@ -1,7 +1,7 @@
-package com.tw.travel.controller;
+package com.tw.travel.controller.payment;
 
 import com.tw.travel.exception.InsufficientFundException;
-import com.tw.travel.service.ServiceFeeService;
+import com.tw.travel.service.payment.ServiceFeeService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;

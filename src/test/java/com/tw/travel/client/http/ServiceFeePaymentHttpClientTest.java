@@ -1,5 +1,7 @@
 package com.tw.travel.client.http;
 
+import com.tw.travel.client.http.payment.ServiceFeePaymentApiModel;
+import com.tw.travel.client.http.payment.ServiceFeePaymentHttpClient;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

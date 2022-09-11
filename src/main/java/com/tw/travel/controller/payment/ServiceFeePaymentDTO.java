@@ -1,4 +1,4 @@
-package com.tw.travel.controller;
+package com.tw.travel.controller.payment;
 
 import java.util.Objects;
 
