@@ -32,10 +32,10 @@ public class PaymentGatewayStubExtension implements ParameterResolver, BeforeAll
 
     @Override
     public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
-        return (PaymentGatewayStub) (url, statusCode) -> {
+        return (PaymentGatewayStub) (url, statusCode, delaySeconds) -> {
             mockServer.stubFor(post(urlEqualTo(url))
                     .willReturn(aResponse()
-                            .withStatus(statusCode)
+                            .withStatus(statusCode).withFixedDelay(delaySeconds * 1000)
                     )
             );
         };

@@ -1,25 +1,22 @@
 package com.tw.travel.client.http;
 
+import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
+import java.time.Duration;
+
 @Component
 public class RestTemplateConfig {
-    @Bean(name = "restTemplate")
-    public RestTemplate restTemplate() {
-//        CloseableHttpClient httpClient = HttpClientBuilder.create ()
-//                .setMaxConnTotal(
-//                        mfsConfiguration.getIntProperty("http.connection-pool.max-connection-total"))
-//                .setMaxConnPerRoute(
-//                        mfsConfiguration.getIntProperty ("http.connection-pool.max-connection-per-route"))
-//                .evictExpiredConnections()
-//                .evictIdleConnections (
-//                        mfsConfiguration.getLongProperty("http.connection-pool.idle-timeout-in-seconds"),
-//                        TimeUnit.SECONDS)
-//                .build ();
-//        ClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory(httpClient);
-        RestTemplate restTemplate = new RestTemplate();
-        return restTemplate;
+
+    @Bean
+    public RestTemplate restTemplate(
+            RestTemplateBuilder restTemplateBuilder) {
+
+        return restTemplateBuilder
+                .setConnectTimeout(Duration.ofSeconds(5))
+                .setReadTimeout(Duration.ofSeconds(5))
+                .build();
     }
 }
