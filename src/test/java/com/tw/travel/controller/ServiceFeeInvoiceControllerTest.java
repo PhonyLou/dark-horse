@@ -73,4 +73,21 @@ public class ServiceFeeInvoiceControllerTest {
         Assertions.assertEquals(new ServiceFeeInvoiceDTO("invoice request not accepted"), returnedDTO);
     }
 
+    @Test
+    public void should_return_200_when_get_invoice_confirmation_given_invoice_gateway_call_back() throws Exception {
+        when(service.storeServiceFeeInvoice(1L, "sample-content", BigDecimal.valueOf(1000L), "3-12345")).thenReturn(
+                new ServiceFeeInvoiceModel(false)
+        );
+
+        String contentAsString = mockMvc.perform(post("/travel-contracts/1/service-fee-invoices/confirmation")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"content\": \"sample-content\",\"invoiceNumber\": \"3-12345\",\"amount\": 1000}"))
+                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
+
+//        Assertions.assertEquals("application/pdf", response.getContentType());
+//        Assertions.assertEquals("sample-content", response.getContentAsString());
+        ServiceFeeInvoiceDTO returnedDTO = asTypeServiceFeeInvoiceDTO(contentAsString);
+        Assertions.assertEquals(new ServiceFeeInvoiceDTO("invoice saved"), returnedDTO);
+    }
+
 }

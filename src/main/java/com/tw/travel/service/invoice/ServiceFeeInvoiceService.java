@@ -30,4 +30,8 @@ public class ServiceFeeInvoiceService {
 
         return new ServiceFeeInvoiceModel(false);
     }
+
+    public ServiceFeeInvoiceModel storeServiceFeeInvoice(Long travelContractId, String invoiceContent, BigDecimal amount, String invoiceNumber) {
+        return new ServiceFeeInvoiceModel(false);
+    }
 }
