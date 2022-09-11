@@ -23,3 +23,6 @@ spring:
     password: guest
 queue:
   name: demoQueue
+
+payment-gateway:
+  host: https://awesome-gateway.com
