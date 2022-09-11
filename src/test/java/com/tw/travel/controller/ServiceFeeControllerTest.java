@@ -1,5 +1,6 @@
 package com.tw.travel.controller;
 
+import com.tw.travel.exception.InsufficientFundException;
 import com.tw.travel.service.ServiceFeePaymentModel;
 import com.tw.travel.service.ServiceFeeService;
 import org.junit.jupiter.api.Assertions;
@@ -54,7 +55,20 @@ public class ServiceFeeControllerTest {
                 .andReturn().getResponse().getContentAsString();
         ServiceFeePaymentDTO returnedDTO = asTypeServiceFeePaymentDTO(contentAsString);
 
-        Assertions.assertEquals(returnedDTO, new ServiceFeePaymentDTO("payment success"));
+        Assertions.assertEquals(new ServiceFeePaymentDTO("payment success"), returnedDTO);
+    }
+
+    @Test
+    public void given_insufficient_fund_when_paying_service_fee_then_return_400() throws Exception {
+        when(serviceFeeService.payServiceFee(1L, BigDecimal.valueOf(1000L))).thenThrow(new InsufficientFundException());
+
+        String contentAsString = mockMvc.perform(post("/travel-contracts/1/service-fee-payments")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"amount\": 1000}")).andExpect(status().isBadRequest())
+                .andReturn().getResponse().getContentAsString();
+        ServiceFeePaymentDTO returnedDTO = asTypeServiceFeePaymentDTO(contentAsString);
+
+        Assertions.assertEquals(new ServiceFeePaymentDTO("insufficient fund"), returnedDTO);
     }
 
 }
