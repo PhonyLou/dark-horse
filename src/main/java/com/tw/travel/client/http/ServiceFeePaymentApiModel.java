@@ -1,9 +1,9 @@
-package com.tw.travel.service;
+package com.tw.travel.client.http;
 
 import java.math.BigDecimal;
 import java.util.Objects;
 
-public class ServiceFeePaymentModel_backUp {
+public class ServiceFeePaymentApiModel {
     private Long travelContractId;
     private BigDecimal amount;
 
@@ -11,7 +11,7 @@ public class ServiceFeePaymentModel_backUp {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        ServiceFeePaymentModel_backUp that = (ServiceFeePaymentModel_backUp) o;
+        ServiceFeePaymentApiModel that = (ServiceFeePaymentApiModel) o;
         return Objects.equals(travelContractId, that.travelContractId) && Objects.equals(amount, that.amount);
     }
 
@@ -20,7 +20,7 @@ public class ServiceFeePaymentModel_backUp {
         return Objects.hash(travelContractId, amount);
     }
 
-    public ServiceFeePaymentModel_backUp(Long travelContractId, BigDecimal amount) {
+    public ServiceFeePaymentApiModel(Long travelContractId, BigDecimal amount) {
         this.travelContractId = travelContractId;
         this.amount = amount;
     }
