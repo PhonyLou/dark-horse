@@ -33,6 +33,11 @@ public class ServiceFeeInvoiceService {
                 .findById(travelContractId)
                 .filter(p -> p.getStatus().equalsIgnoreCase("success"));
         if (successRecord.isPresent()) {
+            Optional<ServiceFeeInvoiceRequestEntity> invoiceRequest = serviceFeeInvoiceRequestRepo.findById(travelContractId);
+            if (invoiceRequest.isPresent()) {
+                return new ServiceFeeInvoiceModel(true);
+            }
+
             boolean sendMqSuccess = invoiceMqClient.issueServiceFeeInvoice(new ServiceFeeInvoiceMqModel(travelContractId, amount));
             serviceFeeInvoiceRequestRepo.save(new ServiceFeeInvoiceRequestEntity(1L, "pending", createdAt, createdAt.plusSeconds(24 * 60 * 60), createdAt));
             return new ServiceFeeInvoiceModel(sendMqSuccess);

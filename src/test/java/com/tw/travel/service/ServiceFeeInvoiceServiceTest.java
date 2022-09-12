@@ -46,6 +46,26 @@ public class ServiceFeeInvoiceServiceTest {
         assertEquals(new ServiceFeeInvoiceModel(true), invoiceModel);
     }
 
+    @Story("Story2 -> AC1 -> Example2 -> Work step 2")
+    @Test
+    void should_return_true_when_issueServiceFeeInvoice_given_payment_success_and_invoice_request_exists() {
+        ServiceFeePaymentRepo serviceFeePaymentRepo = mock(ServiceFeePaymentRepo.class);
+        LocalDate paymentSuccessDate = LocalDate.parse("2022-08-20");
+        ServiceFeePaymentEntity paymentRecord = new ServiceFeePaymentEntity(1L, "success", paymentSuccessDate, paymentSuccessDate.plusDays(5), paymentSuccessDate);
+        when(serviceFeePaymentRepo.findById(1L)).thenReturn(Optional.of(paymentRecord));
+
+        InvoiceMqClient invoiceMqClient = mock(InvoiceMqClient.class);
+        ServiceFeeInvoiceRequestRepo serviceFeeInvoiceRequestRepo = mock(ServiceFeeInvoiceRequestRepo.class);
+
+        Instant previousInvoiceRequestCreatedAt = Instant.parse("2022-08-24T19:30:00Z");
+        when(serviceFeeInvoiceRequestRepo.findById(1L)).thenReturn(Optional.of(new ServiceFeeInvoiceRequestEntity(1L, "pending", previousInvoiceRequestCreatedAt, previousInvoiceRequestCreatedAt.plusSeconds(24 * 60 * 60), previousInvoiceRequestCreatedAt)));
+
+        ServiceFeeInvoiceService service = new ServiceFeeInvoiceService(serviceFeePaymentRepo, invoiceMqClient, null, serviceFeeInvoiceRequestRepo);
+        ServiceFeeInvoiceModel invoiceModel = service.issueServiceFeeInvoice(1L, BigDecimal.valueOf(1000L), previousInvoiceRequestCreatedAt);
+
+        assertEquals(new ServiceFeeInvoiceModel(true), invoiceModel);
+    }
+
     @Test
     void should_return_false_when_issueServiceFeeInvoice_given_payment_is_pending() {
         ServiceFeePaymentRepo serviceFeePaymentRepo = mock(ServiceFeePaymentRepo.class);
