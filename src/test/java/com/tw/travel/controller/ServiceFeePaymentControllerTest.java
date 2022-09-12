@@ -64,6 +64,7 @@ public class ServiceFeePaymentControllerTest {
         Assertions.assertEquals(new ServiceFeePaymentDTO("payment success"), returnedDTO);
     }
 
+    @Story("Story1 -> AC2 -> Example1 -> Work step 1")
     @Test
     public void given_insufficient_fund_when_paying_service_fee_then_return_400() throws Exception {
         when(serviceFeePaymentService.payServiceFee(1L, BigDecimal.valueOf(1000L), LocalDate.parse("2022-09-12"))).thenThrow(new InsufficientFundException());
