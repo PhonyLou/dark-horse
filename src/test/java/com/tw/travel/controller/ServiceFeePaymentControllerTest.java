@@ -78,9 +78,13 @@ public class ServiceFeePaymentControllerTest {
         Assertions.assertEquals(new ServiceFeePaymentDTO("insufficient fund"), returnedDTO);
     }
 
+    @Story("Story1 -> AC3 -> Example1 -> Work step 1")
     @Test
     public void given_payment_gateway_with_InternalServerError_when_paying_service_fee_then_return_500() throws Exception {
-        when(serviceFeePaymentService.payServiceFee(1L, BigDecimal.valueOf(1000L), LocalDate.parse("2022-09-12"))).thenThrow(HttpServerErrorException.InternalServerError.class);
+        when(serviceFeePaymentService.payServiceFee(1L,
+                BigDecimal.valueOf(1000L),
+                LocalDate.parse("2022-09-12")))
+                .thenThrow(HttpServerErrorException.InternalServerError.class);
 
         String contentAsString = mockMvc.perform(post("/travel-contracts/1/service-fee-payments")
                         .contentType(MediaType.APPLICATION_JSON)
