@@ -64,17 +64,20 @@ public class ServiceFeePaymentServiceTest {
         assertEquals(new ServiceFeePaymentModel(true), serviceFeePaymentModel);
     }
 
+    @Story("Story1 -> AC1 -> Example3 -> Work step 2")
     @Test
     void should_return_success_when_payServiceFee_given_payment_success() {
+        LocalDate paymentDate = LocalDate.parse("2022-09-03");
+
         ServiceFeePaymentRepo serviceFeePaymentRepo = mock(ServiceFeePaymentRepo.class);
 
-        ServiceFeePaymentEntity paymentRequestRecord = new ServiceFeePaymentEntity(1L, "success", LocalDate.now(), LocalDate.now().plusDays(5), LocalDate.now());
+        ServiceFeePaymentEntity paymentRequestRecord = new ServiceFeePaymentEntity(1L, "success", paymentDate, paymentDate.plusDays(5), paymentDate);
         when(serviceFeePaymentRepo.findById(1L)).thenReturn(Optional.of(paymentRequestRecord));
 
         ServiceFeePaymentHttpClient httpClient = mock(ServiceFeePaymentHttpClient.class);
 
         ServiceFeePaymentService serviceFeePaymentService = new ServiceFeePaymentService(serviceFeePaymentRepo, httpClient);
-        ServiceFeePaymentModel serviceFeePaymentModel = serviceFeePaymentService.payServiceFee(1L, BigDecimal.valueOf(1000L), LocalDate.parse("2022-09-12"));
+        ServiceFeePaymentModel serviceFeePaymentModel = serviceFeePaymentService.payServiceFee(1L, BigDecimal.valueOf(1000L), LocalDate.parse("2022-09-07"));
 
         assertEquals(new ServiceFeePaymentModel(true), serviceFeePaymentModel);
     }
