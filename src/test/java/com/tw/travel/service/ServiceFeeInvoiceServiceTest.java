@@ -93,6 +93,30 @@ public class ServiceFeeInvoiceServiceTest {
         assertEquals(new ServiceFeeInvoiceModel(false), invoiceModel);
     }
 
+    @Story("Story2 -> AC3 -> Example1 -> Work step 2")
+    @Test
+    void should_return_true_when_issueServiceFeeInvoice() {
+        ServiceFeePaymentRepo serviceFeePaymentRepo = mock(ServiceFeePaymentRepo.class);
+        LocalDate paymentSuccessDate = LocalDate.parse("2022-08-20");
+        ServiceFeePaymentEntity paymentRecord = new ServiceFeePaymentEntity(1L, "success", paymentSuccessDate, paymentSuccessDate.plusDays(5), paymentSuccessDate);
+        when(serviceFeePaymentRepo.findById(1L)).thenReturn(Optional.of(paymentRecord));
+
+        ServiceFeeInvoiceRequestRepo serviceFeeInvoiceRequestRepo = mock(ServiceFeeInvoiceRequestRepo.class);
+        when(serviceFeeInvoiceRequestRepo.findById(1L)).thenReturn(Optional.empty());
+
+        InvoiceMqClient invoiceMqClient = mock(InvoiceMqClient.class);
+        when(invoiceMqClient.issueServiceFeeInvoice(new ServiceFeeInvoiceMqModel(1L, BigDecimal.valueOf(1000L)))).thenReturn(true);
+
+        Instant invoiceRequestCreatedAt = Instant.parse("2022-08-25T15:30:00Z");
+        ServiceFeeInvoiceRequestEntity serviceFeeInvoiceRequestEntity = new ServiceFeeInvoiceRequestEntity(1L, "pending", invoiceRequestCreatedAt, invoiceRequestCreatedAt.plusSeconds(24 * 60 * 60), invoiceRequestCreatedAt);
+        when(serviceFeeInvoiceRequestRepo.save(serviceFeeInvoiceRequestEntity)).thenReturn(serviceFeeInvoiceRequestEntity);
+
+        ServiceFeeInvoiceService service = new ServiceFeeInvoiceService(serviceFeePaymentRepo, invoiceMqClient, null, serviceFeeInvoiceRequestRepo);
+        ServiceFeeInvoiceModel invoiceModel = service.issueServiceFeeInvoice(1L, BigDecimal.valueOf(1000L), invoiceRequestCreatedAt);
+
+        assertEquals(new ServiceFeeInvoiceModel(true), invoiceModel);
+    }
+
     @Test
     void should_return_true_when_storeServiceFeeInvoice_given_invoice_gateway_callback() {
         InvoiceMqClient invoiceMqClient = mock(InvoiceMqClient.class);
