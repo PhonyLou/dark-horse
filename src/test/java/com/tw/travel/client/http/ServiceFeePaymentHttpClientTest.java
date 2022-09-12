@@ -59,6 +59,7 @@ public class ServiceFeePaymentHttpClientTest {
                 () -> httpClient.payServiceFee(new ServiceFeePaymentApiModel(1L, BigDecimal.valueOf(1000L))));
     }
 
+    @Story("Story1 -> AC4 -> Example1 -> Work step 5")
     @Test
     void should_throw_InternalServerError_when_payServiceFee_given_timeout(PaymentGatewayStub paymentGatewayStub) {
         paymentGatewayStub.stubPaymentGateway("/service-fee-payment", 500, 200);
