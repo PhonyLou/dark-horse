@@ -12,12 +12,12 @@ import java.time.LocalDate;
 import java.util.Optional;
 
 @Service
-public class ServiceFeeService {
+public class ServiceFeePaymentService {
     private ServiceFeePaymentRepo serviceFeePaymentRepo;
 
     private ServiceFeePaymentHttpClient httpClient;
 
-    public ServiceFeeService(ServiceFeePaymentRepo serviceFeePaymentRepo, ServiceFeePaymentHttpClient httpClient) {
+    public ServiceFeePaymentService(ServiceFeePaymentRepo serviceFeePaymentRepo, ServiceFeePaymentHttpClient httpClient) {
         this.serviceFeePaymentRepo = serviceFeePaymentRepo;
         this.httpClient = httpClient;
     }

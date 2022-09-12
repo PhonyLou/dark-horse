@@ -4,7 +4,7 @@ import com.tw.helper.Story;
 import com.tw.travel.controller.payment.ServiceFeePaymentDTO;
 import com.tw.travel.exception.InsufficientFundException;
 import com.tw.travel.service.payment.ServiceFeePaymentModel;
-import com.tw.travel.service.payment.ServiceFeeService;
+import com.tw.travel.service.payment.ServiceFeePaymentService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -34,11 +34,11 @@ public class ServiceFeeControllerTest {
     @TestConfiguration
     public static class Config {
         @MockBean
-        ServiceFeeService serviceFeeService;
+        ServiceFeePaymentService serviceFeePaymentService;
     }
 
     @Autowired
-    private ServiceFeeService serviceFeeService;
+    private ServiceFeePaymentService serviceFeePaymentService;
 
     @Autowired
     private MockMvc mockMvc;
@@ -50,7 +50,7 @@ public class ServiceFeeControllerTest {
     @Story("Story1 -> AC1 -> Example1 -> Work step 1")
     @Test
     public void given_balance_sufficient_when_paying_service_fee_then_return_200() throws Exception {
-        when(serviceFeeService.payServiceFee(1L, BigDecimal.valueOf(1000L))).thenReturn(
+        when(serviceFeePaymentService.payServiceFee(1L, BigDecimal.valueOf(1000L))).thenReturn(
                 new ServiceFeePaymentModel(true)
         );
 
@@ -65,7 +65,7 @@ public class ServiceFeeControllerTest {
 
     @Test
     public void given_insufficient_fund_when_paying_service_fee_then_return_400() throws Exception {
-        when(serviceFeeService.payServiceFee(1L, BigDecimal.valueOf(1000L))).thenThrow(new InsufficientFundException());
+        when(serviceFeePaymentService.payServiceFee(1L, BigDecimal.valueOf(1000L))).thenThrow(new InsufficientFundException());
 
         String contentAsString = mockMvc.perform(post("/travel-contracts/1/service-fee-payments")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -78,7 +78,7 @@ public class ServiceFeeControllerTest {
 
     @Test
     public void given_payment_gateway_with_InternalServerError_when_paying_service_fee_then_return_500() throws Exception {
-        when(serviceFeeService.payServiceFee(1L, BigDecimal.valueOf(1000L))).thenThrow(HttpServerErrorException.InternalServerError.class);
+        when(serviceFeePaymentService.payServiceFee(1L, BigDecimal.valueOf(1000L))).thenThrow(HttpServerErrorException.InternalServerError.class);
 
         String contentAsString = mockMvc.perform(post("/travel-contracts/1/service-fee-payments")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -91,7 +91,7 @@ public class ServiceFeeControllerTest {
 
     @Test
     public void given_payment_gateway_timeout_when_paying_service_fee_then_return_500() throws Exception {
-        when(serviceFeeService.payServiceFee(1L, BigDecimal.valueOf(1000L))).thenThrow(ResourceAccessException.class);
+        when(serviceFeePaymentService.payServiceFee(1L, BigDecimal.valueOf(1000L))).thenThrow(ResourceAccessException.class);
 
         String contentAsString = mockMvc.perform(post("/travel-contracts/1/service-fee-payments")
                         .contentType(MediaType.APPLICATION_JSON)
