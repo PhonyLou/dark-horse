@@ -11,6 +11,7 @@ import com.tw.travel.service.invoice.ServiceFeeInvoiceService;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -22,7 +23,7 @@ public class ServiceFeeInvoiceServiceTest {
     @Test
     void should_return_true_when_issueServiceFeeInvoice_given_payment_success_and_invoice_request_accepted() {
         ServiceFeePaymentRepo serviceFeePaymentRepo = mock(ServiceFeePaymentRepo.class);
-        ServiceFeePaymentEntity paymentRecord = new ServiceFeePaymentEntity(1L, "success");
+        ServiceFeePaymentEntity paymentRecord = new ServiceFeePaymentEntity(1L, "success", LocalDate.now(), LocalDate.now().plusDays(5), LocalDate.now());
         when(serviceFeePaymentRepo.findById(1L)).thenReturn(Optional.of(paymentRecord));
 
         InvoiceMqClient invoiceMqClient = mock(InvoiceMqClient.class);
@@ -37,7 +38,7 @@ public class ServiceFeeInvoiceServiceTest {
     @Test
     void should_return_false_when_issueServiceFeeInvoice_given_payment_is_pending() {
         ServiceFeePaymentRepo serviceFeePaymentRepo = mock(ServiceFeePaymentRepo.class);
-        ServiceFeePaymentEntity paymentRecord = new ServiceFeePaymentEntity(1L, "pending");
+        ServiceFeePaymentEntity paymentRecord = new ServiceFeePaymentEntity(1L, "pending", LocalDate.now(), LocalDate.now().plusDays(5), LocalDate.now());
         when(serviceFeePaymentRepo.findById(1L)).thenReturn(Optional.of(paymentRecord));
 
         InvoiceMqClient invoiceMqClient = mock(InvoiceMqClient.class);
@@ -51,7 +52,7 @@ public class ServiceFeeInvoiceServiceTest {
     @Test
     void should_return_false_when_issueServiceFeeInvoice_given_payment_is_failed() {
         ServiceFeePaymentRepo serviceFeePaymentRepo = mock(ServiceFeePaymentRepo.class);
-        ServiceFeePaymentEntity paymentRecord = new ServiceFeePaymentEntity(1L, "failed");
+        ServiceFeePaymentEntity paymentRecord = new ServiceFeePaymentEntity(1L, "failed", LocalDate.now(), LocalDate.now().plusDays(5), LocalDate.now());
         when(serviceFeePaymentRepo.findById(1L)).thenReturn(Optional.of(paymentRecord));
 
         InvoiceMqClient invoiceMqClient = mock(InvoiceMqClient.class);

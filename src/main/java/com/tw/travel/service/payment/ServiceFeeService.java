@@ -8,6 +8,7 @@ import com.tw.travel.exception.InsufficientFundException;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Optional;
 
 @Service
@@ -29,14 +30,16 @@ public class ServiceFeeService {
         }
 
         if (!paymentRecord.isPresent()) {
-            serviceFeePaymentRepo.save(new ServiceFeePaymentEntity(travelContractId, "pending"));
+            serviceFeePaymentRepo.save(new ServiceFeePaymentEntity(travelContractId, "pending", LocalDate.now(), LocalDate.now().plusDays(5), LocalDate.now()));
         }
 
         if (httpClient.payServiceFee(new ServiceFeePaymentApiModel(travelContractId, amount))) {
-            serviceFeePaymentRepo.save(new ServiceFeePaymentEntity(travelContractId, "success"));
+            serviceFeePaymentRepo.updateStatus(travelContractId, "success", LocalDate.now());
+//            serviceFeePaymentRepo.save(new ServiceFeePaymentEntity(travelContractId, "success", null, null, LocalDate.now()));
             return new ServiceFeePaymentModel(true);
         } else {
-            serviceFeePaymentRepo.save(new ServiceFeePaymentEntity(travelContractId, "failed"));
+            serviceFeePaymentRepo.updateStatus(travelContractId, "failed", LocalDate.now());
+//            serviceFeePaymentRepo.save(new ServiceFeePaymentEntity(travelContractId, "failed", null, null, LocalDate.now()));
             throw new InsufficientFundException();
         }
     }

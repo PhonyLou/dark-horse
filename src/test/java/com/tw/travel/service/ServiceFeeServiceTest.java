@@ -12,6 +12,7 @@ import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.ResourceAccessException;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -23,10 +24,10 @@ public class ServiceFeeServiceTest {
 
     @Test
     void should_return_success_when_payServiceFee_given_payment_request_not_exists() {
-        ServiceFeePaymentEntity initPaymentRequestRecord = new ServiceFeePaymentEntity(1L, "pending");
+        ServiceFeePaymentEntity initPaymentRequestRecord = new ServiceFeePaymentEntity(1L, "pending", LocalDate.now(), LocalDate.now().plusDays(5), LocalDate.now());
         ServiceFeePaymentRepo serviceFeePaymentRepo = mock(ServiceFeePaymentRepo.class);
         when(serviceFeePaymentRepo.save(initPaymentRequestRecord)).thenReturn(initPaymentRequestRecord);
-        ServiceFeePaymentEntity successRecord = new ServiceFeePaymentEntity(1L, "success");
+        ServiceFeePaymentEntity successRecord = new ServiceFeePaymentEntity(1L, "success", LocalDate.now(), LocalDate.now().plusDays(5), LocalDate.now());
         when(serviceFeePaymentRepo.save(successRecord)).thenReturn(successRecord);
 
         ServiceFeePaymentApiModel apiModel = new ServiceFeePaymentApiModel(1L, BigDecimal.valueOf(1000L));
@@ -43,10 +44,10 @@ public class ServiceFeeServiceTest {
     void should_return_success_when_payServiceFee_given_payment_request_exists() {
         ServiceFeePaymentRepo serviceFeePaymentRepo = mock(ServiceFeePaymentRepo.class);
 
-        ServiceFeePaymentEntity initPaymentRequestRecord = new ServiceFeePaymentEntity(1L, "pending");
+        ServiceFeePaymentEntity initPaymentRequestRecord = new ServiceFeePaymentEntity(1L, "pending", LocalDate.now(), LocalDate.now().plusDays(5), LocalDate.now());
         when(serviceFeePaymentRepo.findById(1L)).thenReturn(Optional.of(initPaymentRequestRecord));
 
-        ServiceFeePaymentEntity successRecord = new ServiceFeePaymentEntity(1L, "success");
+        ServiceFeePaymentEntity successRecord = new ServiceFeePaymentEntity(1L, "success", LocalDate.now(), LocalDate.now().plusDays(5), LocalDate.now());
         when(serviceFeePaymentRepo.save(successRecord)).thenReturn(successRecord);
 
         ServiceFeePaymentApiModel apiModel = new ServiceFeePaymentApiModel(1L, BigDecimal.valueOf(1000L));
@@ -63,7 +64,7 @@ public class ServiceFeeServiceTest {
     void should_return_success_when_payServiceFee_given_payment_success() {
         ServiceFeePaymentRepo serviceFeePaymentRepo = mock(ServiceFeePaymentRepo.class);
 
-        ServiceFeePaymentEntity paymentRequestRecord = new ServiceFeePaymentEntity(1L, "success");
+        ServiceFeePaymentEntity paymentRequestRecord = new ServiceFeePaymentEntity(1L, "success", LocalDate.now(), LocalDate.now().plusDays(5), LocalDate.now());
         when(serviceFeePaymentRepo.findById(1L)).thenReturn(Optional.of(paymentRequestRecord));
 
         ServiceFeePaymentHttpClient httpClient = mock(ServiceFeePaymentHttpClient.class);
@@ -80,9 +81,9 @@ public class ServiceFeeServiceTest {
 
         when(serviceFeePaymentRepo.findById(1L)).thenReturn(Optional.empty());
 
-        ServiceFeePaymentEntity initPaymentRequestRecord = new ServiceFeePaymentEntity(1L, "pending");
+        ServiceFeePaymentEntity initPaymentRequestRecord = new ServiceFeePaymentEntity(1L, "pending", LocalDate.now(), LocalDate.now().plusDays(5), LocalDate.now());
         when(serviceFeePaymentRepo.save(initPaymentRequestRecord)).thenReturn(initPaymentRequestRecord);
-        ServiceFeePaymentEntity failedPaymentRequestRecord = new ServiceFeePaymentEntity(1L, "failed");
+        ServiceFeePaymentEntity failedPaymentRequestRecord = new ServiceFeePaymentEntity(1L, "failed", LocalDate.now(), LocalDate.now().plusDays(5), LocalDate.now());
         when(serviceFeePaymentRepo.save(failedPaymentRequestRecord)).thenReturn(failedPaymentRequestRecord);
 
         ServiceFeePaymentHttpClient httpClient = mock(ServiceFeePaymentHttpClient.class);
@@ -100,7 +101,7 @@ public class ServiceFeeServiceTest {
 
         when(serviceFeePaymentRepo.findById(1L)).thenReturn(Optional.empty());
 
-        ServiceFeePaymentEntity initPaymentRequestRecord = new ServiceFeePaymentEntity(1L, "pending");
+        ServiceFeePaymentEntity initPaymentRequestRecord = new ServiceFeePaymentEntity(1L, "pending", LocalDate.now(), LocalDate.now().plusDays(5), LocalDate.now());
         when(serviceFeePaymentRepo.save(initPaymentRequestRecord)).thenReturn(initPaymentRequestRecord);
 
         ServiceFeePaymentHttpClient httpClient = mock(ServiceFeePaymentHttpClient.class);
@@ -118,7 +119,7 @@ public class ServiceFeeServiceTest {
 
         when(serviceFeePaymentRepo.findById(1L)).thenReturn(Optional.empty());
 
-        ServiceFeePaymentEntity initPaymentRequestRecord = new ServiceFeePaymentEntity(1L, "pending");
+        ServiceFeePaymentEntity initPaymentRequestRecord = new ServiceFeePaymentEntity(1L, "pending", LocalDate.now(), LocalDate.now().plusDays(5), LocalDate.now());
         when(serviceFeePaymentRepo.save(initPaymentRequestRecord)).thenReturn(initPaymentRequestRecord);
 
         ServiceFeePaymentHttpClient httpClient = mock(ServiceFeePaymentHttpClient.class);
