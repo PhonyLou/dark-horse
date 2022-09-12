@@ -63,6 +63,7 @@ public class ServiceFeeInvoiceControllerTest {
         Assertions.assertEquals(new ServiceFeeInvoiceDTO("invoice request accepted"), returnedDTO);
     }
 
+    @Story("Story2 -> AC2 -> Example1 -> Work step 1")
     @Test
     public void should_return_400_when_issue_service_fee_invoice_given_payment_not_success() throws Exception {
         when(service.issueServiceFeeInvoice(1L, BigDecimal.valueOf(1000L), Instant.parse("2022-08-25T15:30:00Z"))).thenReturn(
