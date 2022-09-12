@@ -1,5 +1,6 @@
 package com.tw.travel.client.mq;
 
+import com.tw.helper.Story;
 import org.junit.jupiter.api.Test;
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -17,6 +18,7 @@ public class InvoiceMqClientTest {
     @Autowired
     private Queue invoiceQueue;
 
+    @Story("Story2 -> AC1 -> Example1 -> Work step 4")
     @Test
     void should_return_true_when_issueServiceFeeInvoice_given_message_sent_to_mq() {
         InvoiceMqClient invoiceMqClient = new InvoiceMqClient(rabbitTemplate, invoiceQueue);
