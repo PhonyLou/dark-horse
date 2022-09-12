@@ -22,7 +22,7 @@ public class ServiceFeePaymentService {
         this.httpClient = httpClient;
     }
 
-    public ServiceFeePaymentModel payServiceFee(Long travelContractId, BigDecimal amount) {
+    public ServiceFeePaymentModel payServiceFee(Long travelContractId, BigDecimal amount, LocalDate paymentDate) {
         Optional<ServiceFeePaymentEntity> paymentRecord = serviceFeePaymentRepo.findById(travelContractId);
         Optional<ServiceFeePaymentEntity> successRecord = paymentRecord.filter(p -> p.getStatus().equalsIgnoreCase("success"));
         if (successRecord.isPresent()) {
@@ -30,15 +30,18 @@ public class ServiceFeePaymentService {
         }
 
         if (!paymentRecord.isPresent()) {
-            serviceFeePaymentRepo.save(new ServiceFeePaymentEntity(travelContractId, "pending", LocalDate.now(), LocalDate.now().plusDays(5), LocalDate.now()));
+            serviceFeePaymentRepo.save(new ServiceFeePaymentEntity(travelContractId, "pending", paymentDate, paymentDate.plusDays(5), paymentDate));
         }
 
         if (httpClient.payServiceFee(new ServiceFeePaymentApiModel(travelContractId, amount))) {
-            serviceFeePaymentRepo.updateStatus(travelContractId, "success", LocalDate.now());
+            Integer successRecords = serviceFeePaymentRepo.updateStatus(travelContractId, "success", paymentDate);
+            if (successRecords == 1) {
+                return new ServiceFeePaymentModel(true);
+            }
 //            serviceFeePaymentRepo.save(new ServiceFeePaymentEntity(travelContractId, "success", null, null, LocalDate.now()));
-            return new ServiceFeePaymentModel(true);
+            return new ServiceFeePaymentModel(false);
         } else {
-            serviceFeePaymentRepo.updateStatus(travelContractId, "failed", LocalDate.now());
+            serviceFeePaymentRepo.updateStatus(travelContractId, "failed", paymentDate);
 //            serviceFeePaymentRepo.save(new ServiceFeePaymentEntity(travelContractId, "failed", null, null, LocalDate.now()));
             throw new InsufficientFundException();
         }

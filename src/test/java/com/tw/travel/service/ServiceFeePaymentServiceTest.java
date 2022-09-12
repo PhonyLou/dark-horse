@@ -24,38 +24,37 @@ public class ServiceFeePaymentServiceTest {
 
     @Test
     void should_return_success_when_payServiceFee_given_payment_request_not_exists() {
-        ServiceFeePaymentEntity initPaymentRequestRecord = new ServiceFeePaymentEntity(1L, "pending", LocalDate.now(), LocalDate.now().plusDays(5), LocalDate.now());
+        LocalDate paymentInitDate = LocalDate.parse("2022-09-12");
+        ServiceFeePaymentEntity initPaymentRequestRecord = new ServiceFeePaymentEntity(1L, "pending", paymentInitDate, paymentInitDate.plusDays(5), paymentInitDate);
         ServiceFeePaymentRepo serviceFeePaymentRepo = mock(ServiceFeePaymentRepo.class);
         when(serviceFeePaymentRepo.save(initPaymentRequestRecord)).thenReturn(initPaymentRequestRecord);
-        ServiceFeePaymentEntity successRecord = new ServiceFeePaymentEntity(1L, "success", LocalDate.now(), LocalDate.now().plusDays(5), LocalDate.now());
-        when(serviceFeePaymentRepo.save(successRecord)).thenReturn(successRecord);
+        when(serviceFeePaymentRepo.updateStatus(1L, "success", paymentInitDate)).thenReturn(1);
 
         ServiceFeePaymentApiModel apiModel = new ServiceFeePaymentApiModel(1L, BigDecimal.valueOf(1000L));
         ServiceFeePaymentHttpClient httpClient = mock(ServiceFeePaymentHttpClient.class);
         when(httpClient.payServiceFee(apiModel)).thenReturn(true);
 
         ServiceFeePaymentService serviceFeePaymentService = new ServiceFeePaymentService(serviceFeePaymentRepo, httpClient);
-        ServiceFeePaymentModel serviceFeePaymentModel = serviceFeePaymentService.payServiceFee(1L, BigDecimal.valueOf(1000L));
+        ServiceFeePaymentModel serviceFeePaymentModel = serviceFeePaymentService.payServiceFee(1L, BigDecimal.valueOf(1000L), paymentInitDate);
 
         assertEquals(new ServiceFeePaymentModel(true), serviceFeePaymentModel);
     }
 
     @Test
     void should_return_success_when_payServiceFee_given_payment_request_exists() {
+        LocalDate paymentDate = LocalDate.parse("2022-09-12");
         ServiceFeePaymentRepo serviceFeePaymentRepo = mock(ServiceFeePaymentRepo.class);
 
-        ServiceFeePaymentEntity initPaymentRequestRecord = new ServiceFeePaymentEntity(1L, "pending", LocalDate.now(), LocalDate.now().plusDays(5), LocalDate.now());
+        ServiceFeePaymentEntity initPaymentRequestRecord = new ServiceFeePaymentEntity(1L, "pending", paymentDate, paymentDate.plusDays(5), paymentDate);
         when(serviceFeePaymentRepo.findById(1L)).thenReturn(Optional.of(initPaymentRequestRecord));
-
-        ServiceFeePaymentEntity successRecord = new ServiceFeePaymentEntity(1L, "success", LocalDate.now(), LocalDate.now().plusDays(5), LocalDate.now());
-        when(serviceFeePaymentRepo.save(successRecord)).thenReturn(successRecord);
+        when(serviceFeePaymentRepo.updateStatus(1L, "success", paymentDate)).thenReturn(1);
 
         ServiceFeePaymentApiModel apiModel = new ServiceFeePaymentApiModel(1L, BigDecimal.valueOf(1000L));
         ServiceFeePaymentHttpClient httpClient = mock(ServiceFeePaymentHttpClient.class);
         when(httpClient.payServiceFee(apiModel)).thenReturn(true);
 
         ServiceFeePaymentService serviceFeePaymentService = new ServiceFeePaymentService(serviceFeePaymentRepo, httpClient);
-        ServiceFeePaymentModel serviceFeePaymentModel = serviceFeePaymentService.payServiceFee(1L, BigDecimal.valueOf(1000L));
+        ServiceFeePaymentModel serviceFeePaymentModel = serviceFeePaymentService.payServiceFee(1L, BigDecimal.valueOf(1000L), paymentDate);
 
         assertEquals(new ServiceFeePaymentModel(true), serviceFeePaymentModel);
     }
@@ -70,7 +69,7 @@ public class ServiceFeePaymentServiceTest {
         ServiceFeePaymentHttpClient httpClient = mock(ServiceFeePaymentHttpClient.class);
 
         ServiceFeePaymentService serviceFeePaymentService = new ServiceFeePaymentService(serviceFeePaymentRepo, httpClient);
-        ServiceFeePaymentModel serviceFeePaymentModel = serviceFeePaymentService.payServiceFee(1L, BigDecimal.valueOf(1000L));
+        ServiceFeePaymentModel serviceFeePaymentModel = serviceFeePaymentService.payServiceFee(1L, BigDecimal.valueOf(1000L), LocalDate.parse("2022-09-12"));
 
         assertEquals(new ServiceFeePaymentModel(true), serviceFeePaymentModel);
     }
@@ -92,7 +91,7 @@ public class ServiceFeePaymentServiceTest {
 
         ServiceFeePaymentService serviceFeePaymentService = new ServiceFeePaymentService(serviceFeePaymentRepo, httpClient);
         assertThrows(InsufficientFundException.class,
-                () -> serviceFeePaymentService.payServiceFee(1L, BigDecimal.valueOf(1000L)));
+                () -> serviceFeePaymentService.payServiceFee(1L, BigDecimal.valueOf(1000L), LocalDate.parse("2022-09-12")));
     }
 
     @Test
@@ -110,7 +109,7 @@ public class ServiceFeePaymentServiceTest {
 
         ServiceFeePaymentService serviceFeePaymentService = new ServiceFeePaymentService(serviceFeePaymentRepo, httpClient);
         assertThrows(HttpServerErrorException.InternalServerError.class,
-                () -> serviceFeePaymentService.payServiceFee(1L, BigDecimal.valueOf(1000L)));
+                () -> serviceFeePaymentService.payServiceFee(1L, BigDecimal.valueOf(1000L), LocalDate.parse("2022-09-12")));
     }
 
     @Test
@@ -128,6 +127,6 @@ public class ServiceFeePaymentServiceTest {
 
         ServiceFeePaymentService serviceFeePaymentService = new ServiceFeePaymentService(serviceFeePaymentRepo, httpClient);
         assertThrows(ResourceAccessException.class,
-                () -> serviceFeePaymentService.payServiceFee(1L, BigDecimal.valueOf(1000L)));
+                () -> serviceFeePaymentService.payServiceFee(1L, BigDecimal.valueOf(1000L), LocalDate.parse("2022-09-12")));
     }
 }

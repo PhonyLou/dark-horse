@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.ResourceAccessException;
 
+import java.time.LocalDate;
+
 @RestController
 public class ServiceFeePaymentController {
 
@@ -23,7 +25,7 @@ public class ServiceFeePaymentController {
     @PostMapping("/travel-contracts/{tid}/service-fee-payments")
     final public ResponseEntity payServiceFee(@PathVariable("tid") Long travelContractId, @RequestBody ServiceFeePaymentRequest req) {
         try {
-            serviceFeePaymentService.payServiceFee(travelContractId, req.getAmount());
+            serviceFeePaymentService.payServiceFee(travelContractId, req.getAmount(), LocalDate.now());
             return ResponseEntity.ok(new ServiceFeePaymentDTO("payment success"));
         } catch (InsufficientFundException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ServiceFeePaymentDTO("insufficient fund"));

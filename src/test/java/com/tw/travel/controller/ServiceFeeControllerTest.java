@@ -20,6 +20,7 @@ import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.ResourceAccessException;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 import static com.tw.helper.DataHelper.asTypeServiceFeePaymentDTO;
 import static org.mockito.Mockito.when;
@@ -50,7 +51,7 @@ public class ServiceFeeControllerTest {
     @Story("Story1 -> AC1 -> Example1 -> Work step 1")
     @Test
     public void given_balance_sufficient_when_paying_service_fee_then_return_200() throws Exception {
-        when(serviceFeePaymentService.payServiceFee(1L, BigDecimal.valueOf(1000L))).thenReturn(
+        when(serviceFeePaymentService.payServiceFee(1L, BigDecimal.valueOf(1000L), LocalDate.parse("2022-09-12"))).thenReturn(
                 new ServiceFeePaymentModel(true)
         );
 
@@ -65,7 +66,7 @@ public class ServiceFeeControllerTest {
 
     @Test
     public void given_insufficient_fund_when_paying_service_fee_then_return_400() throws Exception {
-        when(serviceFeePaymentService.payServiceFee(1L, BigDecimal.valueOf(1000L))).thenThrow(new InsufficientFundException());
+        when(serviceFeePaymentService.payServiceFee(1L, BigDecimal.valueOf(1000L), LocalDate.parse("2022-09-12"))).thenThrow(new InsufficientFundException());
 
         String contentAsString = mockMvc.perform(post("/travel-contracts/1/service-fee-payments")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -78,7 +79,7 @@ public class ServiceFeeControllerTest {
 
     @Test
     public void given_payment_gateway_with_InternalServerError_when_paying_service_fee_then_return_500() throws Exception {
-        when(serviceFeePaymentService.payServiceFee(1L, BigDecimal.valueOf(1000L))).thenThrow(HttpServerErrorException.InternalServerError.class);
+        when(serviceFeePaymentService.payServiceFee(1L, BigDecimal.valueOf(1000L), LocalDate.parse("2022-09-12"))).thenThrow(HttpServerErrorException.InternalServerError.class);
 
         String contentAsString = mockMvc.perform(post("/travel-contracts/1/service-fee-payments")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -91,7 +92,7 @@ public class ServiceFeeControllerTest {
 
     @Test
     public void given_payment_gateway_timeout_when_paying_service_fee_then_return_500() throws Exception {
-        when(serviceFeePaymentService.payServiceFee(1L, BigDecimal.valueOf(1000L))).thenThrow(ResourceAccessException.class);
+        when(serviceFeePaymentService.payServiceFee(1L, BigDecimal.valueOf(1000L), LocalDate.parse("2022-09-12"))).thenThrow(ResourceAccessException.class);
 
         String contentAsString = mockMvc.perform(post("/travel-contracts/1/service-fee-payments")
                         .contentType(MediaType.APPLICATION_JSON)
