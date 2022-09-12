@@ -83,17 +83,16 @@ public class ServiceFeeInvoiceServiceTest {
         assertEquals(new ServiceFeeInvoiceModel(false), invoiceModel);
     }
 
+    @Story("Story2 -> AC2 -> Example2 -> Work step 2")
     @Test
     void should_return_false_when_issueServiceFeeInvoice_given_payment_is_failed() {
+        LocalDate paymentDate = LocalDate.parse("2022-08-20");
         ServiceFeePaymentRepo serviceFeePaymentRepo = mock(ServiceFeePaymentRepo.class);
-        ServiceFeePaymentEntity paymentRecord = new ServiceFeePaymentEntity(1L, "failed", LocalDate.now(), LocalDate.now().plusDays(5), LocalDate.now());
+        ServiceFeePaymentEntity paymentRecord = new ServiceFeePaymentEntity(1L, "failed", paymentDate, paymentDate.plusDays(5), paymentDate);
         when(serviceFeePaymentRepo.findById(1L)).thenReturn(Optional.of(paymentRecord));
 
-        InvoiceMqClient invoiceMqClient = mock(InvoiceMqClient.class);
-        ServiceFeeInvoiceRequestRepo serviceFeeInvoiceRequestRepo = mock(ServiceFeeInvoiceRequestRepo.class);
-
-        ServiceFeeInvoiceService service = new ServiceFeeInvoiceService(serviceFeePaymentRepo, invoiceMqClient, null, serviceFeeInvoiceRequestRepo);
-        ServiceFeeInvoiceModel invoiceModel = service.issueServiceFeeInvoice(1L, BigDecimal.valueOf(1000L), Instant.now());
+        ServiceFeeInvoiceService service = new ServiceFeeInvoiceService(serviceFeePaymentRepo, null, null, null);
+        ServiceFeeInvoiceModel invoiceModel = service.issueServiceFeeInvoice(1L, BigDecimal.valueOf(1000L), Instant.parse("2022-08-25T15:30:00Z"));
 
         assertEquals(new ServiceFeeInvoiceModel(false), invoiceModel);
     }
