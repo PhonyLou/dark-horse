@@ -28,7 +28,8 @@ public class ServiceFeeInvoiceServiceTest {
     @Test
     void should_return_true_when_issueServiceFeeInvoice_given_payment_success_and_invoice_request_accepted() {
         ServiceFeePaymentRepo serviceFeePaymentRepo = mock(ServiceFeePaymentRepo.class);
-        ServiceFeePaymentEntity paymentRecord = new ServiceFeePaymentEntity(1L, "success", LocalDate.now(), LocalDate.now().plusDays(5), LocalDate.now());
+        LocalDate paymentSuccessDate = LocalDate.parse("2022-08-20");
+        ServiceFeePaymentEntity paymentRecord = new ServiceFeePaymentEntity(1L, "success", paymentSuccessDate, paymentSuccessDate.plusDays(5), paymentSuccessDate);
         when(serviceFeePaymentRepo.findById(1L)).thenReturn(Optional.of(paymentRecord));
 
         InvoiceMqClient invoiceMqClient = mock(InvoiceMqClient.class);
