@@ -41,4 +41,21 @@ public class ServiceFeeInvoiceRequestRepoTest {
         Assertions.assertEquals(expected, savedEntity);
         Assertions.assertEquals("2022-08-25T19:30:00Z", savedEntity.getExpiredAt().toString());
     }
+
+    @Story("Story2 -> AC3 -> Example2 -> Work step 3")
+    @Test
+    void should_return_1_when_updateStatus() {
+        Instant invoiceRequestCreatedAt = Instant.parse("2022-08-24T19:30:00Z");
+        ServiceFeeInvoiceRequestEntity invoiceRequest = new ServiceFeeInvoiceRequestEntity(1L, "pending", invoiceRequestCreatedAt, invoiceRequestCreatedAt.plusSeconds(24 * 60 * 60), invoiceRequestCreatedAt);
+        repo.save(invoiceRequest);
+
+        Instant invoiceConfirmationCreatedAt = Instant.parse("2022-08-25T18:30:00Z");
+        Integer successNumber = repo.updateStatus(1L, "success", invoiceConfirmationCreatedAt);
+
+        Assertions.assertEquals(1, successNumber);
+
+        ServiceFeeInvoiceRequestEntity savedEntity = repo.findById(1L).get();
+        Assertions.assertEquals("2022-08-25T18:30:00Z", savedEntity.getLastUpdate().toString());
+        Assertions.assertEquals("success", savedEntity.getStatus());
+    }
 }
