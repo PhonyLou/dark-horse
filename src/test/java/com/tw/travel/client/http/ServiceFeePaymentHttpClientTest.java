@@ -49,6 +49,7 @@ public class ServiceFeePaymentHttpClientTest {
         Assertions.assertFalse(isPaymentSuccess);
     }
 
+    @Story("Story1 -> AC3 -> Example1 -> Work step 5")
     @Test
     void should_throw_InternalServerError_when_payServiceFee_given_payment_gateway_returns_server_side_error(PaymentGatewayStub paymentGatewayStub) {
         paymentGatewayStub.stubPaymentGateway("/service-fee-payment", 500, 0);
