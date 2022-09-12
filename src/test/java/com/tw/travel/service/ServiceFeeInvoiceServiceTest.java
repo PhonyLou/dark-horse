@@ -54,13 +54,12 @@ public class ServiceFeeInvoiceServiceTest {
         ServiceFeePaymentEntity paymentRecord = new ServiceFeePaymentEntity(1L, "success", paymentSuccessDate, paymentSuccessDate.plusDays(5), paymentSuccessDate);
         when(serviceFeePaymentRepo.findById(1L)).thenReturn(Optional.of(paymentRecord));
 
-        InvoiceMqClient invoiceMqClient = mock(InvoiceMqClient.class);
         ServiceFeeInvoiceRequestRepo serviceFeeInvoiceRequestRepo = mock(ServiceFeeInvoiceRequestRepo.class);
 
         Instant previousInvoiceRequestCreatedAt = Instant.parse("2022-08-24T19:30:00Z");
         when(serviceFeeInvoiceRequestRepo.findById(1L)).thenReturn(Optional.of(new ServiceFeeInvoiceRequestEntity(1L, "pending", previousInvoiceRequestCreatedAt, previousInvoiceRequestCreatedAt.plusSeconds(24 * 60 * 60), previousInvoiceRequestCreatedAt)));
 
-        ServiceFeeInvoiceService service = new ServiceFeeInvoiceService(serviceFeePaymentRepo, invoiceMqClient, null, serviceFeeInvoiceRequestRepo);
+        ServiceFeeInvoiceService service = new ServiceFeeInvoiceService(serviceFeePaymentRepo, null, null, serviceFeeInvoiceRequestRepo);
         ServiceFeeInvoiceModel invoiceModel = service.issueServiceFeeInvoice(1L, BigDecimal.valueOf(1000L), Instant.parse("2022-08-25T15:30:00Z"));
 
         assertEquals(new ServiceFeeInvoiceModel(true), invoiceModel);
@@ -74,10 +73,7 @@ public class ServiceFeeInvoiceServiceTest {
         ServiceFeePaymentEntity paymentRecord = new ServiceFeePaymentEntity(1L, "pending", paymentDate, paymentDate.plusDays(5), paymentDate);
         when(serviceFeePaymentRepo.findById(1L)).thenReturn(Optional.of(paymentRecord));
 
-        InvoiceMqClient invoiceMqClient = mock(InvoiceMqClient.class);
-        ServiceFeeInvoiceRequestRepo serviceFeeInvoiceRequestRepo = mock(ServiceFeeInvoiceRequestRepo.class);
-
-        ServiceFeeInvoiceService service = new ServiceFeeInvoiceService(serviceFeePaymentRepo, invoiceMqClient, null, serviceFeeInvoiceRequestRepo);
+        ServiceFeeInvoiceService service = new ServiceFeeInvoiceService(serviceFeePaymentRepo, null, null, null);
         ServiceFeeInvoiceModel invoiceModel = service.issueServiceFeeInvoice(1L, BigDecimal.valueOf(1000L), Instant.parse("2022-08-25T15:30:00Z"));
 
         assertEquals(new ServiceFeeInvoiceModel(false), invoiceModel);
