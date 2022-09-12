@@ -20,7 +20,7 @@ public class ServiceFeeInvoiceController {
 
     @PostMapping("/travel-contracts/{tid}/service-fee-invoices")
     final public ResponseEntity payServiceFee(@PathVariable("tid") Long travelContractId, @RequestBody ServiceFeeInvoiceRequest req) {
-        ServiceFeeInvoiceModel serviceFeeInvoiceModel = service.issueServiceFeeInvoice(travelContractId, req.getAmount());
+        ServiceFeeInvoiceModel serviceFeeInvoiceModel = service.issueServiceFeeInvoice(travelContractId, req.getAmount(), req.getCreatedAt());
         if (serviceFeeInvoiceModel.isSuccess()) {
             return ResponseEntity.ok(new ServiceFeeInvoiceDTO("invoice request accepted"));
         } else {

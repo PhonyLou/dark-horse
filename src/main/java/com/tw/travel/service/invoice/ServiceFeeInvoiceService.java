@@ -9,6 +9,7 @@ import com.tw.travel.client.mq.ServiceFeeInvoiceMqModel;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.util.Optional;
 
 @Service
@@ -23,7 +24,7 @@ public class ServiceFeeInvoiceService {
         this.serviceFeeInvoiceRepo = serviceFeeInvoiceRepo;
     }
 
-    public ServiceFeeInvoiceModel issueServiceFeeInvoice(Long travelContractId, BigDecimal amount) {
+    public ServiceFeeInvoiceModel issueServiceFeeInvoice(Long travelContractId, BigDecimal amount, Instant createdAt) {
         Optional<ServiceFeePaymentEntity> successRecord = serviceFeePaymentRepo
                 .findById(travelContractId)
                 .filter(p -> p.getStatus().equalsIgnoreCase("success"));

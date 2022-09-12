@@ -1,5 +1,6 @@
 package com.tw.travel.controller;
 
+import com.tw.helper.Story;
 import com.tw.travel.controller.invoice.ServiceFeeInvoiceDTO;
 import com.tw.travel.service.invoice.ServiceFeeInvoiceModel;
 import com.tw.travel.service.invoice.ServiceFeeInvoiceService;
@@ -16,6 +17,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.math.BigDecimal;
+import java.time.Instant;
 
 import static com.tw.helper.DataHelper.asTypeServiceFeeInvoiceDTO;
 import static org.mockito.Mockito.when;
@@ -43,15 +45,18 @@ public class ServiceFeeInvoiceControllerTest {
     public void setUp() {
     }
 
+    @Story("Story2 -> AC1 -> Example1 -> Work step 1")
     @Test
     public void should_return_200_when_issue_service_fee_invoice_given_normal_case() throws Exception {
-        when(service.issueServiceFeeInvoice(1L, BigDecimal.valueOf(1000L))).thenReturn(
-                new ServiceFeeInvoiceModel(true)
-        );
+        when(service.issueServiceFeeInvoice(1L,
+                BigDecimal.valueOf(1000L),
+                Instant.parse("2022-08-25T15:30:00Z")))
+                .thenReturn(new ServiceFeeInvoiceModel(true));
 
         String contentAsString = mockMvc.perform(post("/travel-contracts/1/service-fee-invoices")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"amount\": 1000}")).andExpect(status().isOk())
+                        .content("{\"amount\": 1000, \"createdAt\": \"2022-08-25T15:30:00Z\"}"))
+                .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
         ServiceFeeInvoiceDTO returnedDTO = asTypeServiceFeeInvoiceDTO(contentAsString);
 
@@ -60,13 +65,13 @@ public class ServiceFeeInvoiceControllerTest {
 
     @Test
     public void should_return_400_when_issue_service_fee_invoice_given_payment_not_success() throws Exception {
-        when(service.issueServiceFeeInvoice(1L, BigDecimal.valueOf(1000L))).thenReturn(
+        when(service.issueServiceFeeInvoice(1L, BigDecimal.valueOf(1000L), Instant.parse("2022-08-25T15:30:00Z"))).thenReturn(
                 new ServiceFeeInvoiceModel(false)
         );
 
         String contentAsString = mockMvc.perform(post("/travel-contracts/1/service-fee-invoices")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"amount\": 1000}")).andExpect(status().isBadRequest())
+                        .content("{\"amount\": 1000, \"createdAt\": \"2022-08-25T15:30:00Z\"}")).andExpect(status().isBadRequest())
                 .andReturn().getResponse().getContentAsString();
         ServiceFeeInvoiceDTO returnedDTO = asTypeServiceFeeInvoiceDTO(contentAsString);
 

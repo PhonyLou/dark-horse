@@ -11,6 +11,7 @@ import com.tw.travel.service.invoice.ServiceFeeInvoiceService;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.util.Optional;
 
@@ -30,7 +31,7 @@ public class ServiceFeeInvoiceServiceTest {
         when(invoiceMqClient.issueServiceFeeInvoice(new ServiceFeeInvoiceMqModel(1L, BigDecimal.valueOf(1000L)))).thenReturn(true);
 
         ServiceFeeInvoiceService service = new ServiceFeeInvoiceService(serviceFeePaymentRepo, invoiceMqClient, null);
-        ServiceFeeInvoiceModel invoiceModel = service.issueServiceFeeInvoice(1L, BigDecimal.valueOf(1000L));
+        ServiceFeeInvoiceModel invoiceModel = service.issueServiceFeeInvoice(1L, BigDecimal.valueOf(1000L), Instant.now());
 
         assertEquals(new ServiceFeeInvoiceModel(true), invoiceModel);
     }
@@ -44,7 +45,7 @@ public class ServiceFeeInvoiceServiceTest {
         InvoiceMqClient invoiceMqClient = mock(InvoiceMqClient.class);
 
         ServiceFeeInvoiceService service = new ServiceFeeInvoiceService(serviceFeePaymentRepo, invoiceMqClient, null);
-        ServiceFeeInvoiceModel invoiceModel = service.issueServiceFeeInvoice(1L, BigDecimal.valueOf(1000L));
+        ServiceFeeInvoiceModel invoiceModel = service.issueServiceFeeInvoice(1L, BigDecimal.valueOf(1000L), Instant.now());
 
         assertEquals(new ServiceFeeInvoiceModel(false), invoiceModel);
     }
@@ -58,7 +59,7 @@ public class ServiceFeeInvoiceServiceTest {
         InvoiceMqClient invoiceMqClient = mock(InvoiceMqClient.class);
 
         ServiceFeeInvoiceService service = new ServiceFeeInvoiceService(serviceFeePaymentRepo, invoiceMqClient, null);
-        ServiceFeeInvoiceModel invoiceModel = service.issueServiceFeeInvoice(1L, BigDecimal.valueOf(1000L));
+        ServiceFeeInvoiceModel invoiceModel = service.issueServiceFeeInvoice(1L, BigDecimal.valueOf(1000L), Instant.now());
 
         assertEquals(new ServiceFeeInvoiceModel(false), invoiceModel);
     }
