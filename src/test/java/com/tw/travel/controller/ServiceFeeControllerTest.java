@@ -1,5 +1,6 @@
 package com.tw.travel.controller;
 
+import com.tw.helper.Story;
 import com.tw.travel.controller.payment.ServiceFeePaymentDTO;
 import com.tw.travel.exception.InsufficientFundException;
 import com.tw.travel.service.payment.ServiceFeePaymentModel;
@@ -46,6 +47,7 @@ public class ServiceFeeControllerTest {
     public void setUp() {
     }
 
+    @Story("Story1 -> AC1 -> Example1 -> Work step 1")
     @Test
     public void given_balance_sufficient_when_paying_service_fee_then_return_200() throws Exception {
         when(serviceFeeService.payServiceFee(1L, BigDecimal.valueOf(1000L))).thenReturn(
