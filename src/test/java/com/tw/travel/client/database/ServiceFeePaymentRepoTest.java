@@ -52,6 +52,17 @@ public class ServiceFeePaymentRepoTest {
                 actualUpdatedEntity);
     }
 
+    @Story("Story1 -> AC1 -> Example2 -> Work step 3")
+    @Test
+    void should_return_entity_when_findById_given_records_exist() {
+        ServiceFeePaymentEntity expectedEntity = new ServiceFeePaymentEntity(1L, "pending", LocalDate.parse("2022-09-12"), LocalDate.parse("2022-09-12").plusDays(5), LocalDate.parse("2022-09-12"));
+        repo.save(expectedEntity);
+
+        ServiceFeePaymentEntity dbEntity = repo.findById(1L).get();
+
+        assertEquals(expectedEntity, dbEntity);
+    }
+
     @Test
     void should_return_entity_with_failed_when_update_status_given_payment_failed() {
         LocalDate paymentRequestDate = LocalDate.parse("2022-09-11");
