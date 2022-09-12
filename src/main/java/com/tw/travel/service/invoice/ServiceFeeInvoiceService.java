@@ -48,6 +48,7 @@ public class ServiceFeeInvoiceService {
 
     public ServiceFeeInvoiceModel storeServiceFeeInvoice(Long travelContractId, String invoiceContent, BigDecimal amount, String invoiceNumber, Instant createdAt) {
         serviceFeeInvoiceRepo.save(new ServiceFeeInvoiceEntity(travelContractId, amount, invoiceContent, invoiceNumber));
-        return new ServiceFeeInvoiceModel(true);
+        Integer successUpdated = serviceFeeInvoiceRequestRepo.updateStatus(travelContractId, "success", createdAt);
+        return new ServiceFeeInvoiceModel(successUpdated == 1);
     }
 }

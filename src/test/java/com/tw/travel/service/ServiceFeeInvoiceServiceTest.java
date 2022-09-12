@@ -117,18 +117,21 @@ public class ServiceFeeInvoiceServiceTest {
         assertEquals(new ServiceFeeInvoiceModel(true), invoiceModel);
     }
 
+    @Story("Story2 -> AC3 -> Example2 -> Work step 2")
     @Test
     void should_return_true_when_storeServiceFeeInvoice_given_invoice_gateway_callback() {
-        InvoiceMqClient invoiceMqClient = mock(InvoiceMqClient.class);
+        Instant invoiceConfirmationTime = Instant.parse("2022-08-25T18:30:00Z");
         ServiceFeePaymentRepo serviceFeePaymentRepo = mock(ServiceFeePaymentRepo.class);
         ServiceFeeInvoiceRepo serviceFeeInvoiceRepo = mock(ServiceFeeInvoiceRepo.class);
+        ServiceFeeInvoiceRequestRepo serviceFeeInvoiceRequestRepo = mock(ServiceFeeInvoiceRequestRepo.class);
+
         ServiceFeeInvoiceEntity entity = new ServiceFeeInvoiceEntity(1L, BigDecimal.valueOf(1000L), "sample-content", "3-12345");
         when(serviceFeeInvoiceRepo.save(entity)).thenReturn(entity);
 
-        ServiceFeeInvoiceRequestRepo serviceFeeInvoiceRequestRepo = mock(ServiceFeeInvoiceRequestRepo.class);
+        when(serviceFeeInvoiceRequestRepo.updateStatus(1L, "success", invoiceConfirmationTime)).thenReturn(1);
 
-        ServiceFeeInvoiceService service = new ServiceFeeInvoiceService(serviceFeePaymentRepo, invoiceMqClient, serviceFeeInvoiceRepo, serviceFeeInvoiceRequestRepo);
-        ServiceFeeInvoiceModel invoiceModel = service.storeServiceFeeInvoice(1L, "sample-content", BigDecimal.valueOf(1000L), "3-12345", Instant.now());
+        ServiceFeeInvoiceService service = new ServiceFeeInvoiceService(serviceFeePaymentRepo, null, serviceFeeInvoiceRepo, serviceFeeInvoiceRequestRepo);
+        ServiceFeeInvoiceModel invoiceModel = service.storeServiceFeeInvoice(1L, "sample-content", BigDecimal.valueOf(1000L), "3-12345", invoiceConfirmationTime);
 
         assertEquals(new ServiceFeeInvoiceModel(true), invoiceModel);
     }
