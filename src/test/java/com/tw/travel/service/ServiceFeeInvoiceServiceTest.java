@@ -1,11 +1,14 @@
 package com.tw.travel.service;
 
+import com.tw.helper.Story;
 import com.tw.travel.client.database.invoice.ServiceFeeInvoiceEntity;
 import com.tw.travel.client.database.invoice.ServiceFeeInvoiceRepo;
+import com.tw.travel.client.database.invoice.ServiceFeeInvoiceRequestEntity;
 import com.tw.travel.client.database.payment.ServiceFeePaymentEntity;
 import com.tw.travel.client.database.payment.ServiceFeePaymentRepo;
 import com.tw.travel.client.mq.InvoiceMqClient;
 import com.tw.travel.client.mq.ServiceFeeInvoiceMqModel;
+import com.tw.travel.client.database.invoice.ServiceFeeInvoiceRequestRepo;
 import com.tw.travel.service.invoice.ServiceFeeInvoiceModel;
 import com.tw.travel.service.invoice.ServiceFeeInvoiceService;
 import org.junit.jupiter.api.Test;
@@ -21,6 +24,7 @@ import static org.mockito.Mockito.when;
 
 public class ServiceFeeInvoiceServiceTest {
 
+    @Story("Story2 -> AC1 -> Example1 -> Work step 2")
     @Test
     void should_return_true_when_issueServiceFeeInvoice_given_payment_success_and_invoice_request_accepted() {
         ServiceFeePaymentRepo serviceFeePaymentRepo = mock(ServiceFeePaymentRepo.class);
@@ -30,8 +34,13 @@ public class ServiceFeeInvoiceServiceTest {
         InvoiceMqClient invoiceMqClient = mock(InvoiceMqClient.class);
         when(invoiceMqClient.issueServiceFeeInvoice(new ServiceFeeInvoiceMqModel(1L, BigDecimal.valueOf(1000L)))).thenReturn(true);
 
-        ServiceFeeInvoiceService service = new ServiceFeeInvoiceService(serviceFeePaymentRepo, invoiceMqClient, null);
-        ServiceFeeInvoiceModel invoiceModel = service.issueServiceFeeInvoice(1L, BigDecimal.valueOf(1000L), Instant.now());
+        ServiceFeeInvoiceRequestRepo serviceFeeInvoiceRequestRepo = mock(ServiceFeeInvoiceRequestRepo.class);
+        Instant invoiceRequestCreatedAt = Instant.parse("2022-08-25T15:30:00Z");
+        ServiceFeeInvoiceRequestEntity serviceFeeInvoiceRequestEntity = new ServiceFeeInvoiceRequestEntity(1L, "pending", invoiceRequestCreatedAt, invoiceRequestCreatedAt.plusSeconds(24 * 60 * 60), invoiceRequestCreatedAt);
+        when(serviceFeeInvoiceRequestRepo.save(serviceFeeInvoiceRequestEntity)).thenReturn(serviceFeeInvoiceRequestEntity);
+
+        ServiceFeeInvoiceService service = new ServiceFeeInvoiceService(serviceFeePaymentRepo, invoiceMqClient, null, serviceFeeInvoiceRequestRepo);
+        ServiceFeeInvoiceModel invoiceModel = service.issueServiceFeeInvoice(1L, BigDecimal.valueOf(1000L), invoiceRequestCreatedAt);
 
         assertEquals(new ServiceFeeInvoiceModel(true), invoiceModel);
     }
@@ -43,8 +52,9 @@ public class ServiceFeeInvoiceServiceTest {
         when(serviceFeePaymentRepo.findById(1L)).thenReturn(Optional.of(paymentRecord));
 
         InvoiceMqClient invoiceMqClient = mock(InvoiceMqClient.class);
+        ServiceFeeInvoiceRequestRepo serviceFeeInvoiceRequestRepo = mock(ServiceFeeInvoiceRequestRepo.class);
 
-        ServiceFeeInvoiceService service = new ServiceFeeInvoiceService(serviceFeePaymentRepo, invoiceMqClient, null);
+        ServiceFeeInvoiceService service = new ServiceFeeInvoiceService(serviceFeePaymentRepo, invoiceMqClient, null, serviceFeeInvoiceRequestRepo);
         ServiceFeeInvoiceModel invoiceModel = service.issueServiceFeeInvoice(1L, BigDecimal.valueOf(1000L), Instant.now());
 
         assertEquals(new ServiceFeeInvoiceModel(false), invoiceModel);
@@ -57,8 +67,9 @@ public class ServiceFeeInvoiceServiceTest {
         when(serviceFeePaymentRepo.findById(1L)).thenReturn(Optional.of(paymentRecord));
 
         InvoiceMqClient invoiceMqClient = mock(InvoiceMqClient.class);
+        ServiceFeeInvoiceRequestRepo serviceFeeInvoiceRequestRepo = mock(ServiceFeeInvoiceRequestRepo.class);
 
-        ServiceFeeInvoiceService service = new ServiceFeeInvoiceService(serviceFeePaymentRepo, invoiceMqClient, null);
+        ServiceFeeInvoiceService service = new ServiceFeeInvoiceService(serviceFeePaymentRepo, invoiceMqClient, null, serviceFeeInvoiceRequestRepo);
         ServiceFeeInvoiceModel invoiceModel = service.issueServiceFeeInvoice(1L, BigDecimal.valueOf(1000L), Instant.now());
 
         assertEquals(new ServiceFeeInvoiceModel(false), invoiceModel);
@@ -72,7 +83,9 @@ public class ServiceFeeInvoiceServiceTest {
         ServiceFeeInvoiceEntity entity = new ServiceFeeInvoiceEntity(1L, BigDecimal.valueOf(1000L), "sample-content", "3-12345");
         when(serviceFeeInvoiceRepo.save(entity)).thenReturn(entity);
 
-        ServiceFeeInvoiceService service = new ServiceFeeInvoiceService(serviceFeePaymentRepo, invoiceMqClient, serviceFeeInvoiceRepo);
+        ServiceFeeInvoiceRequestRepo serviceFeeInvoiceRequestRepo = mock(ServiceFeeInvoiceRequestRepo.class);
+
+        ServiceFeeInvoiceService service = new ServiceFeeInvoiceService(serviceFeePaymentRepo, invoiceMqClient, serviceFeeInvoiceRepo, serviceFeeInvoiceRequestRepo);
         ServiceFeeInvoiceModel invoiceModel = service.storeServiceFeeInvoice(1L, "sample-content", BigDecimal.valueOf(1000L), "3-12345");
 
         assertEquals(new ServiceFeeInvoiceModel(true), invoiceModel);

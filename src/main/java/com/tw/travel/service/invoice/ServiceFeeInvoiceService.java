@@ -2,6 +2,8 @@ package com.tw.travel.service.invoice;
 
 import com.tw.travel.client.database.invoice.ServiceFeeInvoiceEntity;
 import com.tw.travel.client.database.invoice.ServiceFeeInvoiceRepo;
+import com.tw.travel.client.database.invoice.ServiceFeeInvoiceRequestEntity;
+import com.tw.travel.client.database.invoice.ServiceFeeInvoiceRequestRepo;
 import com.tw.travel.client.database.payment.ServiceFeePaymentEntity;
 import com.tw.travel.client.database.payment.ServiceFeePaymentRepo;
 import com.tw.travel.client.mq.InvoiceMqClient;
@@ -16,12 +18,14 @@ import java.util.Optional;
 public class ServiceFeeInvoiceService {
     private final ServiceFeePaymentRepo serviceFeePaymentRepo;
     private final ServiceFeeInvoiceRepo serviceFeeInvoiceRepo;
+    private final ServiceFeeInvoiceRequestRepo serviceFeeInvoiceRequestRepo;
     private final InvoiceMqClient invoiceMqClient;
 
-    public ServiceFeeInvoiceService(ServiceFeePaymentRepo serviceFeePaymentRepo, InvoiceMqClient invoiceMqClient, ServiceFeeInvoiceRepo serviceFeeInvoiceRepo) {
+    public ServiceFeeInvoiceService(ServiceFeePaymentRepo serviceFeePaymentRepo, InvoiceMqClient invoiceMqClient, ServiceFeeInvoiceRepo serviceFeeInvoiceRepo, ServiceFeeInvoiceRequestRepo serviceFeeInvoiceRequestRepo) {
         this.serviceFeePaymentRepo = serviceFeePaymentRepo;
         this.invoiceMqClient = invoiceMqClient;
         this.serviceFeeInvoiceRepo = serviceFeeInvoiceRepo;
+        this.serviceFeeInvoiceRequestRepo = serviceFeeInvoiceRequestRepo;
     }
 
     public ServiceFeeInvoiceModel issueServiceFeeInvoice(Long travelContractId, BigDecimal amount, Instant createdAt) {
@@ -30,6 +34,7 @@ public class ServiceFeeInvoiceService {
                 .filter(p -> p.getStatus().equalsIgnoreCase("success"));
         if (successRecord.isPresent()) {
             boolean sendMqSuccess = invoiceMqClient.issueServiceFeeInvoice(new ServiceFeeInvoiceMqModel(travelContractId, amount));
+            serviceFeeInvoiceRequestRepo.save(new ServiceFeeInvoiceRequestEntity(1L, "pending", createdAt, createdAt.plusSeconds(24 * 60 * 60), createdAt));
             return new ServiceFeeInvoiceModel(sendMqSuccess);
         }
 
