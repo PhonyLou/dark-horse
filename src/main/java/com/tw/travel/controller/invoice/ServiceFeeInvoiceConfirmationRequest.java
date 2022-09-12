@@ -1,16 +1,27 @@
 package com.tw.travel.controller.invoice;
 
 import java.math.BigDecimal;
+import java.time.Instant;
 
 public class ServiceFeeInvoiceConfirmationRequest {
     private BigDecimal amount;
     private String invoiceContent;
     private String invoiceNumber;
+    private Instant createdAt;
 
-    public ServiceFeeInvoiceConfirmationRequest(BigDecimal amount, String invoiceContent, String invoiceNumber) {
+    public Instant getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Instant createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public ServiceFeeInvoiceConfirmationRequest(BigDecimal amount, String invoiceContent, String invoiceNumber, Instant createdAt) {
         this.amount = amount;
         this.invoiceContent = invoiceContent;
         this.invoiceNumber = invoiceNumber;
+        this.createdAt = createdAt;
     }
 
     public ServiceFeeInvoiceConfirmationRequest() {

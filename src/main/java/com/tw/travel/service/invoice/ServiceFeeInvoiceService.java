@@ -46,7 +46,7 @@ public class ServiceFeeInvoiceService {
         return new ServiceFeeInvoiceModel(false);
     }
 
-    public ServiceFeeInvoiceModel storeServiceFeeInvoice(Long travelContractId, String invoiceContent, BigDecimal amount, String invoiceNumber) {
+    public ServiceFeeInvoiceModel storeServiceFeeInvoice(Long travelContractId, String invoiceContent, BigDecimal amount, String invoiceNumber, Instant createdAt) {
         serviceFeeInvoiceRepo.save(new ServiceFeeInvoiceEntity(travelContractId, amount, invoiceContent, invoiceNumber));
         return new ServiceFeeInvoiceModel(true);
     }

@@ -30,7 +30,7 @@ public class ServiceFeeInvoiceController {
 
     @PostMapping("/travel-contracts/{tid}/service-fee-invoices/confirmation")
     final public ResponseEntity storeServiceFeeInvoice(@PathVariable("tid") Long travelContractId, @RequestBody ServiceFeeInvoiceConfirmationRequest req) {
-        service.storeServiceFeeInvoice(travelContractId, req.getInvoiceContent(), req.getAmount(), req.getInvoiceNumber());
+        service.storeServiceFeeInvoice(travelContractId, req.getInvoiceContent(), req.getAmount(), req.getInvoiceNumber(), req.getCreatedAt());
         return ResponseEntity.ok(new ServiceFeeInvoiceDTO("invoice saved"));
     }
 

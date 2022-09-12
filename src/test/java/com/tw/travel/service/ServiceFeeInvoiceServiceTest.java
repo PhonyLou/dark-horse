@@ -128,7 +128,7 @@ public class ServiceFeeInvoiceServiceTest {
         ServiceFeeInvoiceRequestRepo serviceFeeInvoiceRequestRepo = mock(ServiceFeeInvoiceRequestRepo.class);
 
         ServiceFeeInvoiceService service = new ServiceFeeInvoiceService(serviceFeePaymentRepo, invoiceMqClient, serviceFeeInvoiceRepo, serviceFeeInvoiceRequestRepo);
-        ServiceFeeInvoiceModel invoiceModel = service.storeServiceFeeInvoice(1L, "sample-content", BigDecimal.valueOf(1000L), "3-12345");
+        ServiceFeeInvoiceModel invoiceModel = service.storeServiceFeeInvoice(1L, "sample-content", BigDecimal.valueOf(1000L), "3-12345", Instant.now());
 
         assertEquals(new ServiceFeeInvoiceModel(true), invoiceModel);
     }
