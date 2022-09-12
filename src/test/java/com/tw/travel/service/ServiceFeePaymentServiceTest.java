@@ -1,5 +1,6 @@
 package com.tw.travel.service;
 
+import com.tw.helper.Story;
 import com.tw.travel.client.database.payment.ServiceFeePaymentEntity;
 import com.tw.travel.client.database.payment.ServiceFeePaymentRepo;
 import com.tw.travel.client.http.payment.ServiceFeePaymentApiModel;
@@ -22,6 +23,7 @@ import static org.mockito.Mockito.when;
 
 public class ServiceFeePaymentServiceTest {
 
+    @Story("Story1 -> AC1 -> Example1 -> Work step 2")
     @Test
     void should_return_success_when_payServiceFee_given_payment_request_not_exists() {
         LocalDate paymentInitDate = LocalDate.parse("2022-09-12");
