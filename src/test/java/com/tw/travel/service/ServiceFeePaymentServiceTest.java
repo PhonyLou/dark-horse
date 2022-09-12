@@ -82,16 +82,17 @@ public class ServiceFeePaymentServiceTest {
         assertEquals(new ServiceFeePaymentModel(true), serviceFeePaymentModel);
     }
 
+    @Story("Story1 -> AC2 -> Example1 -> Work step 2")
     @Test
     void should_throw_InsufficientFundException_when_payServiceFee_given_no_sufficient_fund() {
+        LocalDate paymentDate = LocalDate.parse("2022-09-12");
         ServiceFeePaymentRepo serviceFeePaymentRepo = mock(ServiceFeePaymentRepo.class);
 
         when(serviceFeePaymentRepo.findById(1L)).thenReturn(Optional.empty());
 
-        ServiceFeePaymentEntity initPaymentRequestRecord = new ServiceFeePaymentEntity(1L, "pending", LocalDate.now(), LocalDate.now().plusDays(5), LocalDate.now());
+        ServiceFeePaymentEntity initPaymentRequestRecord = new ServiceFeePaymentEntity(1L, "pending", paymentDate, paymentDate.plusDays(5), paymentDate);
         when(serviceFeePaymentRepo.save(initPaymentRequestRecord)).thenReturn(initPaymentRequestRecord);
-        ServiceFeePaymentEntity failedPaymentRequestRecord = new ServiceFeePaymentEntity(1L, "failed", LocalDate.now(), LocalDate.now().plusDays(5), LocalDate.now());
-        when(serviceFeePaymentRepo.save(failedPaymentRequestRecord)).thenReturn(failedPaymentRequestRecord);
+        when(serviceFeePaymentRepo.updateStatus(1L, "failed", paymentDate)).thenReturn(1);
 
         ServiceFeePaymentHttpClient httpClient = mock(ServiceFeePaymentHttpClient.class);
         when(httpClient.payServiceFee(new ServiceFeePaymentApiModel(1L, BigDecimal.valueOf(1000L))))
@@ -99,7 +100,7 @@ public class ServiceFeePaymentServiceTest {
 
         ServiceFeePaymentService serviceFeePaymentService = new ServiceFeePaymentService(serviceFeePaymentRepo, httpClient);
         assertThrows(InsufficientFundException.class,
-                () -> serviceFeePaymentService.payServiceFee(1L, BigDecimal.valueOf(1000L), LocalDate.parse("2022-09-12")));
+                () -> serviceFeePaymentService.payServiceFee(1L, BigDecimal.valueOf(1000L), paymentDate));
     }
 
     @Test
