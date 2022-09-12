@@ -63,16 +63,17 @@ public class ServiceFeePaymentRepoTest {
         assertEquals(expectedEntity, dbEntity);
     }
 
+    @Story("Story1 -> AC2 -> Example1 -> Work step 3")
     @Test
     void should_return_entity_with_failed_when_update_status_given_payment_failed() {
-        LocalDate paymentRequestDate = LocalDate.parse("2022-09-11");
+        LocalDate paymentRequestDate = LocalDate.parse("2022-09-12");
         ServiceFeePaymentEntity expectedEntity = new ServiceFeePaymentEntity(1L, "pending", paymentRequestDate, paymentRequestDate.plusDays(5), paymentRequestDate);
         ServiceFeePaymentEntity savedEntity = repo.save(expectedEntity);
         assertEquals("pending", savedEntity.getStatus());
 
-        ServiceFeePaymentEntity expectedUpdateEntity = new ServiceFeePaymentEntity(1L, "failed", paymentRequestDate, paymentRequestDate.plusDays(5), paymentRequestDate);
-        repo.save(expectedUpdateEntity);
+        Integer failedRecord = repo.updateStatus(1L, "failed", paymentRequestDate);
 
+        assertEquals(1, failedRecord);
         assertEquals("failed", repo.findById(1L).get().getStatus());
     }
 
