@@ -57,7 +57,7 @@ public class ServiceFeePaymentControllerTest {
 
         String contentAsString = mockMvc.perform(post("/travel-contracts/1/service-fee-payments")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"amount\": 1000}")).andExpect(status().isOk())
+                        .content("{\"amount\": 1000, \"createdAt\": \"2022-09-12\"}")).andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
         ServiceFeePaymentDTO returnedDTO = asTypeServiceFeePaymentDTO(contentAsString);
 
@@ -71,7 +71,7 @@ public class ServiceFeePaymentControllerTest {
 
         String contentAsString = mockMvc.perform(post("/travel-contracts/1/service-fee-payments")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"amount\": 1000}")).andExpect(status().isBadRequest())
+                        .content("{\"amount\": 1000, \"createdAt\": \"2022-09-12\"}")).andExpect(status().isBadRequest())
                 .andReturn().getResponse().getContentAsString();
         ServiceFeePaymentDTO returnedDTO = asTypeServiceFeePaymentDTO(contentAsString);
 
@@ -88,20 +88,21 @@ public class ServiceFeePaymentControllerTest {
 
         String contentAsString = mockMvc.perform(post("/travel-contracts/1/service-fee-payments")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"amount\": 1000}")).andExpect(status().isInternalServerError())
+                        .content("{\"amount\": 1000, \"createdAt\": \"2022-09-12\"}")).andExpect(status().isInternalServerError())
                 .andReturn().getResponse().getContentAsString();
         ServiceFeePaymentDTO returnedDTO = asTypeServiceFeePaymentDTO(contentAsString);
 
         Assertions.assertEquals(new ServiceFeePaymentDTO("payment failed, try later"), returnedDTO);
     }
 
+    @Story("Story1 -> AC4 -> Example1 -> Work step 1")
     @Test
     public void given_payment_gateway_timeout_when_paying_service_fee_then_return_500() throws Exception {
-        when(serviceFeePaymentService.payServiceFee(1L, BigDecimal.valueOf(1000L), LocalDate.parse("2022-09-12"))).thenThrow(ResourceAccessException.class);
+        when(serviceFeePaymentService.payServiceFee(1L, BigDecimal.valueOf(1000L), LocalDate.parse("2022-09-15"))).thenThrow(ResourceAccessException.class);
 
         String contentAsString = mockMvc.perform(post("/travel-contracts/1/service-fee-payments")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"amount\": 1000}")).andExpect(status().isInternalServerError())
+                        .content("{\"amount\": 1000, \"createdAt\": \"2022-09-15\"}")).andExpect(status().isInternalServerError())
                 .andReturn().getResponse().getContentAsString();
         ServiceFeePaymentDTO returnedDTO = asTypeServiceFeePaymentDTO(contentAsString);
 

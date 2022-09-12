@@ -25,7 +25,7 @@ public class ServiceFeePaymentController {
     @PostMapping("/travel-contracts/{tid}/service-fee-payments")
     final public ResponseEntity payServiceFee(@PathVariable("tid") Long travelContractId, @RequestBody ServiceFeePaymentRequest req) {
         try {
-            serviceFeePaymentService.payServiceFee(travelContractId, req.getAmount(), LocalDate.now());
+            serviceFeePaymentService.payServiceFee(travelContractId, req.getAmount(), req.getCreatedAt());
             return ResponseEntity.ok(new ServiceFeePaymentDTO("payment success"));
         } catch (InsufficientFundException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ServiceFeePaymentDTO("insufficient fund"));
