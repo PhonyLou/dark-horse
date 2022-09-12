@@ -1,5 +1,6 @@
 package com.tw.travel.client.http;
 
+import com.tw.helper.Story;
 import com.tw.travel.client.http.payment.PaymentGateway;
 import com.tw.travel.client.http.payment.ServiceFeePaymentApiModel;
 import com.tw.travel.client.http.payment.ServiceFeePaymentHttpClient;
@@ -28,6 +29,7 @@ public class ServiceFeePaymentHttpClientTest {
     @Autowired
     private PaymentGateway paymentGateway;
 
+    @Story("Story1 -> AC1 -> Example1 -> Work step 5")
     @Test
     void should_return_true_when_payServiceFee_given_payment_gateway_returns_200(PaymentGatewayStub paymentGatewayStub) {
         paymentGatewayStub.stubPaymentGateway("/service-fee-payment", 200, 0);
