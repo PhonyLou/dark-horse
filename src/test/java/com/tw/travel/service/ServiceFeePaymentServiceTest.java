@@ -103,13 +103,15 @@ public class ServiceFeePaymentServiceTest {
                 () -> serviceFeePaymentService.payServiceFee(1L, BigDecimal.valueOf(1000L), paymentDate));
     }
 
+    @Story("Story1 -> AC3 -> Example1 -> Work step 2")
     @Test
     void should_throw_InternalServerError_when_payServiceFee_given_payment_gateway_go_wrong() {
+        LocalDate paymentDate = LocalDate.parse("2022-09-12");
         ServiceFeePaymentRepo serviceFeePaymentRepo = mock(ServiceFeePaymentRepo.class);
 
         when(serviceFeePaymentRepo.findById(1L)).thenReturn(Optional.empty());
 
-        ServiceFeePaymentEntity initPaymentRequestRecord = new ServiceFeePaymentEntity(1L, "pending", LocalDate.now(), LocalDate.now().plusDays(5), LocalDate.now());
+        ServiceFeePaymentEntity initPaymentRequestRecord = new ServiceFeePaymentEntity(1L, "pending", paymentDate, paymentDate.plusDays(5), paymentDate);
         when(serviceFeePaymentRepo.save(initPaymentRequestRecord)).thenReturn(initPaymentRequestRecord);
 
         ServiceFeePaymentHttpClient httpClient = mock(ServiceFeePaymentHttpClient.class);
@@ -118,7 +120,7 @@ public class ServiceFeePaymentServiceTest {
 
         ServiceFeePaymentService serviceFeePaymentService = new ServiceFeePaymentService(serviceFeePaymentRepo, httpClient);
         assertThrows(HttpServerErrorException.InternalServerError.class,
-                () -> serviceFeePaymentService.payServiceFee(1L, BigDecimal.valueOf(1000L), LocalDate.parse("2022-09-12")));
+                () -> serviceFeePaymentService.payServiceFee(1L, BigDecimal.valueOf(1000L), paymentDate));
     }
 
     @Test
